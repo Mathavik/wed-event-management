@@ -110,13 +110,8 @@ export default function Header() {
                     >
                       {link.label}
                     </span>
-                    {/* Active dot */}
-                    {activeLink === link.label && (
-                      <span
-                        className="absolute top-1 right-2 w-1 h-1 rounded-full"
-                        style={{ background: "#C9A84C" }}
-                      />
-                    )}
+                   
+                   
                   </button>
                   {i < navLinks.length - 1 && (
                     <FloralSeparator />
@@ -272,7 +267,7 @@ export default function Header() {
                   className="text-sm group-hover:text-[#C9A84C] transition-colors duration-200"
                   style={{
                     fontFamily: "Georgia, serif",
-                    color: activeLink === link.label ? "#C9A84C" : "#C9A84C",
+                    color: activeLink === link.label ? "#C9A84C" : "#9a7a5a",
                     letterSpacing: "0.05em",
                   }}
                 >
