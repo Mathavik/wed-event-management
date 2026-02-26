@@ -1,25 +1,30 @@
-import React, { useEffect } from "react";
-import { BrowserRouter as Router, Routes, Route, useLocation, Navigate } from "react-router-dom";
+import React from "react";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
 import "./App.css";
 
-const ScrollToTop: React.FC = () => {
-  const { pathname } = useLocation();
+// Header & Footer Import
+// import KalyanaVaibhogamHeader from "./KalyanaVaibhogamHeader";
+// import KalyanaVaibhogamFooter from "./KalyanaVaibhogamFooter";
+import Header from "./components/header";
+import Footer from "./components/footer";
 
-  useEffect(() => {
-    window.scrollTo({ top: 0, behavior: "auto" });
-  }, [pathname]);
-
-  return null;
+// Dummy Home Page (remove if you already have)
+const Home: React.FC = () => {
+  return <h1 style={{ padding: "100px", textAlign: "center" }}>Home Page</h1>;
 };
 
 const App: React.FC = () => {
   return (
     <Router>
-        <ScrollToTop />
-        <Routes>
+      <Header/>
 
-        </Routes>
+      <Routes>
+        <Route path="/" element={<Home />} />
+      </Routes>
+
+      {/* <KalyanaVaibhogamFooter /> */}
+      <Footer/>
     </Router>
   );
 };
