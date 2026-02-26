@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-
+import logo from "../assets/logo.png";
 const navLinks = [
   { label: "Home", href: "#" },
   { label: "About Us", href: "#" },
@@ -15,72 +15,14 @@ const FloralSeparator = () => (
   </svg>
 );
 
-const Logo = () => (
-  <div className="flex items-center gap-3 select-none">
-    {/* Floral emblem */}
-    <svg viewBox="0 0 48 48" width="44" height="44" fill="none">
-      <circle cx="24" cy="24" r="5" fill="#C9A84C" />
-      {[0, 45, 90, 135, 180, 225, 270, 315].map((deg, i) => (
-        <ellipse
-          key={i}
-          cx="24"
-          cy="13"
-          rx="3.2"
-          ry="7"
-          fill="#C9A84C"
-          opacity={i % 2 === 0 ? 0.85 : 0.5}
-          transform={`rotate(${deg} 24 24)`}
-        />
-      ))}
-      <circle cx="24" cy="24" r="8" stroke="#C9A84C" strokeWidth="0.6" opacity={0.3} fill="none" />
-    </svg>
 
-    {/* Brand name */}
-    <div className="leading-none">
-      <span
-        style={{
-          fontFamily: "'Palatino Linotype', 'Palatino', 'Book Antiqua', serif",
-          color: "#C9A84C",
-          fontSize: "1.65rem",
-          fontStyle: "italic",
-          letterSpacing: "0.02em",
-          textShadow: "0 2px 10px rgba(201,168,76,0.35)",
-          display: "block",
-          lineHeight: 1.1,
-        }}
-      >
-        Kalyana
-      </span>
-      <span
-        style={{
-          fontFamily: "'Palatino Linotype', 'Palatino', 'Book Antiqua', serif",
-          color: "#C9A84C",
-          fontSize: "1.65rem",
-          fontStyle: "italic",
-          letterSpacing: "0.02em",
-          textShadow: "0 2px 10px rgba(201,168,76,0.35)",
-          display: "block",
-          lineHeight: 1.1,
-        }}
-      >
-        Vaibhogam
-      </span>
-      <div className="flex items-center gap-1 mt-0.5">
-        <div className="h-px w-4 bg-[#C9A84C] opacity-40" />
-        <span
-          style={{
-            fontFamily: "Georgia, serif",
-            color: "#8B6914",
-            fontSize: "0.45rem",
-            letterSpacing: "0.2em",
-            textTransform: "uppercase",
-          }}
-        >
-          Wedding Planners
-        </span>
-        <div className="h-px w-4 bg-[#C9A84C] opacity-40" />
-      </div>
-    </div>
+const Logo = () => (
+  <div className="flex items-center">
+    <img
+      src={logo}
+      alt="Kalyana Vaibhogam"
+      className="h-40 w-auto object-contain"
+    />
   </div>
 );
 
