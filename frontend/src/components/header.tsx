@@ -9,6 +9,7 @@ const navLinks = [
   { label: "Contact", href: "#" },
 ];
 
+
 const FloralSeparator = () => (
   <svg viewBox="0 0 8 8" width="8" height="8" fill="#C9A84C" opacity={0.6}>
     <polygon points="4,0 8,4 4,8 0,4" />
@@ -90,7 +91,7 @@ export default function Header() {
                     className="relative px-4 py-2 text-sm group transition-all duration-200"
                     style={{
                       fontFamily: "Georgia, serif",
-                      color: activeLink === link.label ? "#C9A84C" : "#9a7a5a",
+                      color: activeLink === link.label ? "#C9A84C" : "#C9A84C",
                       letterSpacing: "0.05em",
                     }}
                   >
@@ -271,7 +272,7 @@ export default function Header() {
                   className="text-sm group-hover:text-[#C9A84C] transition-colors duration-200"
                   style={{
                     fontFamily: "Georgia, serif",
-                    color: activeLink === link.label ? "#C9A84C" : "#9a7a5a",
+                    color: activeLink === link.label ? "#C9A84C" : "#C9A84C",
                     letterSpacing: "0.05em",
                   }}
                 >
