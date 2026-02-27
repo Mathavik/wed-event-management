@@ -13,7 +13,7 @@ export default function Package() {
   const [events, setEvents] = useState<EventType[]>([]);
 
   useEffect(() => {
-    axios.get("http://localhost:8000/events")
+    axios.get("http://127.0.0.1:8000/api/events")
       .then(res => setEvents(res.data));
   }, []);
 
