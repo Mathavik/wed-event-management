@@ -15,3 +15,8 @@ Route::post('/register', [AuthController::class, 'register']);
 
 // LOGIN - Ippo sariya irukku
 Route::post('/login', [AuthController::class, 'login']);
+
+
+Route::prefix('services')->group(function () {
+    require __DIR__.'/services.php';
+});
