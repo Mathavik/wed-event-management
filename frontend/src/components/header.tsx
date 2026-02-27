@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import logo from "../assets/logo.png";
 import { Link, useLocation } from "react-router-dom";
 
+
 const navLinks = [
     { label: "Home", path: "/" },
     { label: "Services", path: "/services" },
@@ -30,9 +31,16 @@ const Logo = () => (
 export default function Header() {
     const [scrolled, setScrolled] = useState(false);
     const [menuOpen, setMenuOpen] = useState(false);
+    const [user, setUser] = useState<any>(null);
+    const [dropdownOpen, setDropdownOpen] = useState(false);
     // const [activeLink, setActiveLink] = useState("Home");
     const location = useLocation();
-
+    useEffect(() => {
+        const storedUser = localStorage.getItem("user");
+        if (storedUser) {
+            setUser(JSON.parse(storedUser));
+        }
+    }, []);
     useEffect(() => {
         const onScroll = () => setScrolled(window.scrollY > 40);
         window.addEventListener("scroll", onScroll);
@@ -119,31 +127,61 @@ export default function Header() {
 
                         {/* CTA Button */}
 
-<div className="hidden lg:flex items-center gap-4">
-  <Link
-    to="/booknow"
-    className="relative px-6 py-2.5 text-xs font-bold tracking-widest uppercase transition-all duration-300 hover:scale-105 active:scale-95 overflow-hidden group inline-block"
-    style={{
-      fontFamily: "Georgia, serif",
-      background: "linear-gradient(135deg, #8B6914 0%, #C9A84C 50%, #8B6914 100%)",
-      color: "#1a0404",
-      borderRadius: "2px",
-      letterSpacing: "0.15em",
-      boxShadow: "0 2px 15px rgba(201,168,76,0.25)",
-      textDecoration: "none",
-    }}
-  >
-    <span className="relative z-10">✦ Book Now ✦</span>
-
+                        <div className="hidden lg:flex items-center gap-4">
+                           {user ? (
+  <div className="relative">
+    
+    {/* Clickable User Area */}
     <div
-      className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
-      style={{
-        background:
-          "linear-gradient(135deg, #C9A84C 0%, #f0d080 50%, #C9A84C 100%)",
-      }}
-    />
+      onClick={() => setDropdownOpen(!dropdownOpen)}
+      className="flex items-center gap-2 cursor-pointer select-none"
+    >
+      <div className="w-9 h-9 rounded-full bg-pink-500 text-white flex items-center justify-center font-bold">
+        {user?.name?.charAt(0).toUpperCase()}
+      </div>
+      <span style={{ color: "#C9A84C" }}>
+        {user?.name}
+      </span>
+    </div>
+
+    {/* Dropdown Menu */}
+    {dropdownOpen && (
+      <div
+        className="absolute right-0 mt-3 w-40 rounded shadow-lg overflow-hidden z-50"
+        style={{
+          background: "#1a0404",
+          border: "1px solid rgba(201,168,76,0.3)",
+        }}
+      >
+        <Link
+          to="/profilepage"
+          className="block px-4 py-2 text-sm hover:bg-[#2a0808]"
+          style={{ color: "#C9A84C" }}
+          onClick={() => setDropdownOpen(false)}
+        >
+          Profile
+        </Link>
+
+        <button
+          onClick={() => {
+            localStorage.removeItem("user");
+            setDropdownOpen(false);
+            window.location.href = "/";
+          }}
+          className="w-full text-left px-4 py-2 text-sm hover:bg-[#2a0808]"
+          style={{ color: "#C9A84C" }}
+        >
+          Logout
+        </button>
+      </div>
+    )}
+  </div>
+) : (
+  <Link to="/login" style={{ color: "#C9A84C" }}>
+    Login
   </Link>
-</div>
+)}
+                        </div>
 
                         {/* Mobile hamburger */}
                         <button
