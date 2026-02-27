@@ -1,33 +1,41 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
+import axiosInstance from "../../axiosInstance";
 
-const services = [
-  {
-    title: "Venue Selection",
-    image: "https://images.unsplash.com/photo-1519741497674-611481863552",
-  },
-  {
-    title: "Catering",
-    image: "https://images.unsplash.com/photo-1555244162-803834f70033",
-  },
-  {
-    title: "Decoration",
-    image: "https://images.unsplash.com/photo-1520854221256-17451cc331bf",
-  },
-  {
-    title: "Photography",
-    image: "https://images.unsplash.com/photo-1511285560929-80b456fea0bc",
-  },
-  {
-    title: "Entertainment",
-    image: "https://images.unsplash.com/photo-1506157786151-b8491531f063",
-  },
-  {
-    title: "Bridal Styling",
-    image: "https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9",
-  },
-];
+interface Service {
+  id: number;
+  title: string;
+  image: string;
+}
 
 const ServicesOverview = () => {
+  const [services, setServices] = useState<Service[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    const fetchServices = async () => {
+      try {
+        const response = await axiosInstance.get<Service[]>("/services/services");
+        setServices(response.data);
+      } catch (err) {
+        console.error(err);
+        setError("Failed to load services");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchServices();
+  }, []);
+
+  if (loading) {
+    return <p className="text-center py-20">Loading services...</p>;
+  }
+
+  if (error) {
+    return <p className="text-center py-20 text-red-500">{error}</p>;
+  }
+
   return (
     <section className="py-20 bg-white">
       <h2 className="text-4xl text-center font-semibold mb-12">
@@ -35,13 +43,13 @@ const ServicesOverview = () => {
       </h2>
 
       <div className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto px-6">
-        {services.map((service, index) => (
+        {services.map((service) => (
           <div
-            key={index}
+            key={service.id}
             className="bg-white shadow-lg rounded-xl overflow-hidden hover:scale-105 transition duration-300"
           >
             <img
-              src={`${service.image}?auto=format&fit=crop&w=600&q=80`}
+              src={service.image}
               alt={service.title}
               className="h-48 w-full object-cover"
             />
