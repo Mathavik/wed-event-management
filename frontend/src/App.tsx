@@ -6,6 +6,8 @@ import Services from "./pages/services/services";
 import Login from "./pages/login/login";
 import Home from "./pages/home/home";
 import BookNow from "./pages/contact/booknow";
+import Register from "./pages/Register/register";
+import ProfilePage from "./pages/ProfilePage/profilepage";
 
 
 function App() {
@@ -19,6 +21,8 @@ function App() {
         <Route path="/packages" element={<Package />} />
         <Route path="/login" element={<Login />} />
         <Route path="/booknow" element={<BookNow />} />
+        <Route path="/register" element={<Register />} />
+        <Route path="/profilepage" element={<ProfilePage/>}/>
 
       </Routes>
 
