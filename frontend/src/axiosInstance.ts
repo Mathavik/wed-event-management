@@ -1,7 +1,7 @@
 import axios from 'axios';
 const axiosInstance = axios.create({
   // Keep baseURL as server root — route paths in the frontend include `/api` already.
-  baseURL: 'http://localhost:5000',
+  baseURL: 'http://127.0.0.1:8000/api',
   headers: {
     'Content-Type': 'application/json',
   },
