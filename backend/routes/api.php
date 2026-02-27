@@ -14,6 +14,13 @@ Route::get('/', function () {
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
 
+// LOGIN - Ippo sariya irukku
+Route::post('/login', [AuthController::class, 'login']);
+
+
+Route::prefix('services')->group(function () {
+    require __DIR__.'/services.php';
+});
 // Event Routes - 2. Intha mathiri mathunga ($router use pannathinga)
 Route::get('/events', [EventController::class, 'index']);
 Route::get('/events/{id}', [EventController::class, 'show']);
