@@ -17,4 +17,8 @@ class Service extends Model
     {
         return $this->belongsTo(Event::class);
     }
+      public function providers()
+    {
+        return $this->hasMany(ServiceProvider::class);
+    }
 }
