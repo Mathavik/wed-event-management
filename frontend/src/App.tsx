@@ -17,7 +17,7 @@ function App() {
         {/* ✅ User Routes: Header & Footer inga mattum dhaan varum */}
         <Route path="/" element={<MainLayout />}>
           <Route index element={<Home />} />
-          <Route path="/services/:eventId" element={<Services />} />
+          <Route path="services/:eventId" element={<Services />} />
           <Route path="packages" element={<Package />} />
           <Route path="login" element={<Login />} />
           <Route path="booknow" element={<BookNow />} />
