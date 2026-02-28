@@ -9,5 +9,12 @@ class Service extends Model
     protected $fillable = [
         'title',
         'image',
+        'event_id', // <-- add this
     ];
+
+    // Optional: Relation to Event
+    public function event()
+    {
+        return $this->belongsTo(Event::class);
+    }
 }

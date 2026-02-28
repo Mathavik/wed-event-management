@@ -10,9 +10,13 @@ return new class extends Migration
     {
         Schema::create('services', function (Blueprint $table) {
             $table->id();
+            $table->unsignedBigInteger('event_id'); // link to events table
             $table->string('title');
-            $table->string('image');
+            $table->string('image')->nullable();
             $table->timestamps();
+
+            // Foreign key constraint
+            $table->foreign('event_id')->references('id')->on('events')->onDelete('cascade');
         });
     }
 
