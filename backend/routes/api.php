@@ -5,6 +5,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\EventController;
 use App\Http\Controllers\AdminUserController; // ← Add this line
 use App\Http\Controllers\AdminEventController; // ← Add this line
+use App\Http\Controllers\EventserviceController; 
 Route::get('/', function () {
     return response()->json([
         "message" => "Kalyana Vaibhogam API Working"
@@ -37,3 +38,23 @@ Route::get('/events', [AdminEventController::class,'index']);
     Route::put('/events/{id}', [AdminEventController::class,'update']);
     Route::delete('/events/{id}', [AdminEventController::class,'destroy']);
 });
+/*
+|--------------------------------------------------------------------------
+| EVENT SERVICES APIs
+|--------------------------------------------------------------------------
+*/
+
+// Get all services
+Route::get('/services', [EventServiceController::class, 'index']);
+
+// Get single service
+Route::get('/services/{id}', [EventServiceController::class, 'show']);
+
+// Create service
+Route::post('/services', [EventServiceController::class, 'store']);
+
+// Update service
+Route::put('/services/{id}', [EventServiceController::class, 'update']);
+
+// Delete service
+Route::delete('/services/{id}', [EventServiceController::class, 'destroy']);
