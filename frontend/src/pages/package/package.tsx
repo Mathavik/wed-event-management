@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
 interface EventType {
@@ -11,10 +12,12 @@ interface EventType {
 
 export default function Package() {
   const [events, setEvents] = useState<EventType[]>([]);
+  const navigate = useNavigate();
 
   useEffect(() => {
     axios.get("http://127.0.0.1:8000/api/events")
-      .then(res => setEvents(res.data));
+      .then(res => setEvents(res.data))
+      .catch(err => console.error("Failed to fetch events:", err));
   }, []);
 
   return (
@@ -25,6 +28,7 @@ export default function Package() {
         <img
           src="http://localhost:8000/uploads/events/hero.jpg"
           className="w-full h-full object-cover blur-sm"
+          alt="Hero"
         />
         <div className="absolute inset-0 flex flex-col items-center justify-center text-white">
           <h1 className="text-4xl font-bold">
@@ -46,6 +50,7 @@ export default function Package() {
             <img
               src={`http://localhost:8000/uploads/events/${event.image}`}
               className="h-48 w-full object-cover"
+              alt={event.title}
             />
 
             <div className="p-5">
@@ -69,14 +74,17 @@ export default function Package() {
                 ))}
               </div>
 
-              <button className="mt-4 w-full bg-pink-500 hover:bg-pink-600 text-white py-2 rounded-lg transition">
+              {/* Explore Button */}
+              <button
+                onClick={() => navigate(`/services/${event.id}`)}
+                className="mt-4 w-full bg-pink-500 hover:bg-pink-600 text-white py-2 rounded-lg transition"
+              >
                 Explore
               </button>
             </div>
           </div>
         ))}
       </div>
-
     </div>
   );
 }
