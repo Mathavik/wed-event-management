@@ -7,9 +7,22 @@ use Illuminate\Http\Request;
 
 class ServiceController extends Controller
 {
-    // GET /services
-    public function index()
+    // GET /services (optionally filter by event_id)
+    public function index(Request $request)
     {
+        if ($request->has('event_id')) {
+            $eventId = $request->query('event_id');
+            $services = Service::where('event_id', $eventId)->get();
+
+            if ($services->isEmpty()) {
+                return response()->json([
+                    'message' => 'No services found for this event'
+                ], 404);
+            }
+
+            return response()->json($services, 200);
+        }
+
         return response()->json(Service::all(), 200);
     }
 
@@ -27,27 +40,28 @@ class ServiceController extends Controller
         return response()->json($service, 200);
     }
 
-    // POST /services (Single or Bulk Insert)
+    // POST /services (single or bulk insert)
     public function store(Request $request)
     {
         $data = $request->all();
 
-        // Detect if it's a bulk insert (array of arrays)
+        // Bulk insert
         if (isset($data[0]) && is_array($data[0])) {
-            // Validate each item in the array
             $request->validate([
                 '*.title' => 'required|string|max:255',
                 '*.image' => 'required|string|max:255',
                 '*.event_id' => 'required|integer|exists:events,id',
             ]);
 
-            Service::insert($data); // Bulk insert
+            Service::insert($data);
+
             return response()->json([
                 'message' => 'Services created successfully',
                 'data' => $data
             ], 201);
-        } else {
-            // Single insert
+        } 
+        // Single insert
+        else {
             $request->validate([
                 'title' => 'required|string|max:255',
                 'image' => 'required|string|max:255',
@@ -55,25 +69,13 @@ class ServiceController extends Controller
             ]);
 
             $service = Service::create($data);
+
             return response()->json([
                 'message' => 'Service created successfully',
                 'data' => $service
             ], 201);
         }
     }
-    // GET /services/event/{eventId}
-public function getByEvent($eventId)
-{
-    $services = Service::where('event_id', $eventId)->get();
-
-    if ($services->isEmpty()) {
-        return response()->json([
-            'message' => 'No services found for this event'
-        ], 404);
-    }
-
-    return response()->json($services, 200);
-}
 
     // PUT /services/{id}
     public function update(Request $request, $id)

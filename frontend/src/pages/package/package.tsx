@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom"; // <--- import this
 import axios from "axios";
 
 interface EventType {
@@ -12,35 +12,17 @@ interface EventType {
 
 export default function Package() {
   const [events, setEvents] = useState<EventType[]>([]);
-  const navigate = useNavigate();
+  const navigate = useNavigate(); // <--- hook
 
   useEffect(() => {
     axios.get("http://127.0.0.1:8000/api/events")
-      .then(res => setEvents(res.data))
-      .catch(err => console.error("Failed to fetch events:", err));
+      .then(res => setEvents(res.data));
   }, []);
 
   return (
     <div className="min-h-screen bg-pink-50">
+      {/* ...hero section... */}
 
-      {/* Hero Section */}
-      <div className="relative h-72">
-        <img
-          src="http://localhost:8000/uploads/events/hero.jpg"
-          className="w-full h-full object-cover blur-sm"
-          alt="Hero"
-        />
-        <div className="absolute inset-0 flex flex-col items-center justify-center text-white">
-          <h1 className="text-4xl font-bold">
-            Choose Your Event Type
-          </h1>
-          <p className="mt-2 text-lg">
-            Let us make your special moments unforgettable 💫
-          </p>
-        </div>
-      </div>
-
-      {/* Cards Section */}
       <div className="grid md:grid-cols-3 sm:grid-cols-2 gap-6 p-10">
         {events.map((event) => (
           <div
@@ -50,17 +32,13 @@ export default function Package() {
             <img
               src={`http://localhost:8000/uploads/events/${event.image}`}
               className="h-48 w-full object-cover"
-              alt={event.title}
             />
 
             <div className="p-5">
               <h2 className="text-xl font-bold text-pink-600">
                 {event.title}
               </h2>
-
-              <p className="text-gray-600 mt-2 text-sm">
-                {event.description}
-              </p>
+              <p className="text-gray-600 mt-2 text-sm">{event.description}</p>
 
               {/* Tags */}
               <div className="flex flex-wrap gap-2 mt-3">
@@ -76,6 +54,7 @@ export default function Package() {
 
               {/* Explore Button */}
               <button
+                
                 onClick={() => navigate(`/services/${event.id}`)}
                 className="mt-4 w-full bg-pink-500 hover:bg-pink-600 text-white py-2 rounded-lg transition"
               >
