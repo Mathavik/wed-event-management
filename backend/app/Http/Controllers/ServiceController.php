@@ -41,66 +41,70 @@ class ServiceController extends Controller
     }
 
     // POST /services (single or bulk insert)
-    public function store(Request $request)
-    {
-        $data = $request->all();
+public function store(Request $request)
+{
+    $request->validate([
+        'title' => 'required|string|max:255',
+        'image' => 'required|image|max:5120', // 5MB limit
+        'event_id' => 'required|integer|exists:events,id',
+    ]);
 
-        // Bulk insert
-        if (isset($data[0]) && is_array($data[0])) {
-            $request->validate([
-                '*.title' => 'required|string|max:255',
-                '*.image' => 'required|string|max:255',
-                '*.event_id' => 'required|integer|exists:events,id',
-            ]);
+    $imageName = time() . '_' . uniqid() . '.' . 
+                 $request->file('image')->getClientOriginalExtension();
 
-            Service::insert($data);
+    $request->file('image')->move(
+        public_path('uploads/services'),
+        $imageName
+    );
 
-            return response()->json([
-                'message' => 'Services created successfully',
-                'data' => $data
-            ], 201);
-        } 
-        // Single insert
-        else {
-            $request->validate([
-                'title' => 'required|string|max:255',
-                'image' => 'required|string|max:255',
-                'event_id' => 'required|integer|exists:events,id',
-            ]);
+    $service = Service::create([
+        'title' => $request->title,
+        'image' => $imageName,
+        'event_id' => $request->event_id,
+    ]);
 
-            $service = Service::create($data);
-
-            return response()->json([
-                'message' => 'Service created successfully',
-                'data' => $service
-            ], 201);
-        }
-    }
+    return response()->json([
+        'message' => 'Service created successfully',
+        'data' => $service
+    ], 201);
+}
 
     // PUT /services/{id}
-    public function update(Request $request, $id)
-    {
-        $service = Service::find($id);
+public function update(Request $request, $id)
+{
+    $service = Service::findOrFail($id);
 
-        if (!$service) {
-            return response()->json([
-                'message' => 'Service not found'
-            ], 404);
-        }
+    $request->validate([
+        'title' => 'nullable|string|max:255',
+        'image' => 'nullable|image|max:5120',
+    ]);
 
-        $request->validate([
-            'title' => 'sometimes|required|string|max:255',
-            'image' => 'sometimes|required|string|max:255',
-            'event_id' => 'sometimes|required|integer|exists:events,id',
-        ]);
-
-        $service->update($request->all());
-
-        return response()->json([
-            'message' => 'Service updated successfully',
-            'data' => $service
-        ], 200);
+    // Update title
+    if ($request->filled('title')) {
+        $service->title = $request->title;
     }
+
+    // Update image only if new image selected
+    if ($request->hasFile('image')) {
+
+        $imageName = time() . '_' . uniqid() . '.' .
+                     $request->file('image')->getClientOriginalExtension();
+
+        $request->file('image')->move(
+            public_path('uploads/services'),
+            $imageName
+        );
+
+        $service->image = $imageName;
+    }
+
+    $service->save();
+
+    return response()->json([
+        'message' => 'Service updated successfully',
+        'data' => $service
+    ]);
+}
 
     // DELETE /services/{id}
     public function destroy($id)

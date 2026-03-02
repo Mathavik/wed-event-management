@@ -46,11 +46,11 @@ const Services = () => {
             key={service.id}
             className="bg-white shadow-lg rounded-xl overflow-hidden hover:scale-105 transition duration-300"
           >
-            <img
-              src={`http://127.0.0.1:8000/uploads/services/${service.image}`}
-              alt={service.title}
-              className="h-48 w-full object-cover"
-            />
+       <img
+  src={`http://127.0.0.1:8000/uploads/services/${service.image}`}
+  alt={service.title}
+  className="h-64 w-full object-cover bg-gray-100"
+/>
 
             <div className="p-6 text-center">
               <h3 className="text-xl font-semibold">{service.title}</h3>
