@@ -1,21 +1,22 @@
 import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
 import axiosInstance from "../../axiosInstance";
 
 interface Service {
   id: number;
   title: string;
-  image: string;          // stored filename
-  image_url?: string;     // full URL provided by the backend
+  image: string;
+  image_url?: string;
 }
 
-const ServicesOverview = () => {
-  const navigate = useNavigate();
+const HeaderService = () => {
   const [services, setServices] = useState<Service[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
+    // scroll to top each time this page mounts
+    window.scrollTo(0, 0);
+
     const fetchServices = async () => {
       try {
         const response = await axiosInstance.get<Service[]>("/services");
@@ -45,16 +46,17 @@ const ServicesOverview = () => {
         Our Services
       </h2>
 
-      <h3 className="text-2xl font-medium text-center mb-6">Featured Services</h3>
-
       <div className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto px-6">
-        {services.slice(0,6).map((service) => (
+        {services.map((service) => (
           <div
             key={service.id}
             className="bg-white shadow-lg rounded-xl overflow-hidden hover:scale-105 transition duration-300"
           >
             <img
-              src={service.image_url || `http://127.0.0.1:8000/uploads/services/${service.image}`}
+              src={
+                service.image_url ||
+                `http://127.0.0.1:8000/uploads/services/${service.image}`
+              }
               alt={service.title}
               className="h-48 w-full object-cover"
             />
@@ -67,20 +69,8 @@ const ServicesOverview = () => {
           </div>
         ))}
       </div>
-
-      <div className="flex justify-center mt-8">
-        <button
-          className="bg-pink-500 text-white px-6 py-3 rounded hover:bg-pink-600 transition"
-          onClick={() => {
-            navigate('/headerservice');
-            window.scrollTo(0, 0);
-          }}
-        >
-          Explore More Services
-        </button>
-      </div>
     </section>
   );
 };
 
-export default ServicesOverview;
+export default HeaderService;

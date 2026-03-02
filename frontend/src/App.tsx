@@ -13,6 +13,8 @@ import RegisterProvider from "./vendor/RegisterProvider";
 import ServiceProvider from "./pages/ServiceProvider/ServiceProvider";
 
 import VendorRoutes from "./vendor/layout/VendorRoutes";
+import headerservice from "./pages/services/headerservice";
+import HeaderService from "./pages/services/headerservice";
 
 function App() {
   return (
@@ -27,6 +29,7 @@ function App() {
           <Route path="booknow" element={<BookNow />} />
           <Route path="register" element={<Register />} />
           <Route path="profilepage" element={<ProfilePage />} />
+        <Route path="/headerservice" element={<HeaderService/>} />
 
           <Route path="registerprovider" element={<RegisterProvider />} />
 
@@ -37,7 +40,6 @@ function App() {
         <Route path="/admin/*" element={<AdminRoutes />} />
         {/* ✅ Vendor Routes (MainLayout-ku veliya) */}
         <Route path="/vendor/*" element={<VendorRoutes />} />
-
 
 
       </Routes>
