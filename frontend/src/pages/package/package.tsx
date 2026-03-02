@@ -55,7 +55,7 @@ export default function Package() {
               {/* Explore Button */}
               <button
                 
-                onClick={() => navigate(`/services/${event.id}`)}
+                onClick={() => navigate(`/event/${event.id}`)}
                 className="mt-4 w-full bg-pink-500 hover:bg-pink-600 text-white py-2 rounded-lg transition"
               >
                 Explore
