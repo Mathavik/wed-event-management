@@ -43,8 +43,15 @@ const RegisterProvider: React.FC = () => {
 const handleSubmit = async (e: React.FormEvent) => {
   e.preventDefault();
 
+  const payload = {
+    ...formData,
+    service_id: Number(formData.service_id),
+  };
+
+  console.log("Sending:", payload); // Debug check
+
   try {
-    const response = await axiosInstance.post("/providers", formData);
+    const response = await axiosInstance.post("/providers", payload);
 
     setMessage("Provider Registered Successfully ✅");
     console.log(response.data);

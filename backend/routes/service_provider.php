@@ -1,16 +1,16 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\ServiceProviderController;
+use App\Http\Controllers\ServiceProvidersController;
 
 // Get providers for a service
-Route::get('/services/{service_id}/providers', [ServiceProviderController::class, 'index']);
+Route::get('/services/{service_id}/providers', [ServiceProvidersController::class, 'index']);
 
 // Register provider
-Route::post('/', [ServiceProviderController::class, 'store']);
+Route::post('/', [ServiceProvidersController::class, 'store']);
 
 // Get single provider
-Route::get('/providers/{id}', [ServiceProviderController::class, 'show']);
+Route::get('/providers/{id}', [ServiceProvidersController::class, 'show']);
 
 // Delete provider
-Route::delete('/providers/{id}', [ServiceProviderController::class, 'destroy']);
+Route::delete('/providers/{id}', [ServiceProvidersController::class, 'destroy']);
