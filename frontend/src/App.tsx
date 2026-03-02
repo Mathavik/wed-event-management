@@ -9,6 +9,7 @@ import Register from "./pages/Register/register";
 import ProfilePage from "./pages/ProfilePage/profilepage";
 import AdminRoutes from "./admin/AdminRoutes";
 import MainLayout from "./layout/MainLayout";
+import RegisterProvider from "./vendor/RegisterProvider";
 
 function App() {
   return (
@@ -23,6 +24,9 @@ function App() {
           <Route path="booknow" element={<BookNow />} />
           <Route path="register" element={<Register />} />
           <Route path="profilepage" element={<ProfilePage />} />
+
+          <Route path="registerprovider" element={<RegisterProvider />} />
+
         </Route>
 
         {/* ✅ Admin Routes: Idhu MainLayout-ku veliya irukkuradhala Header varaadhu */}

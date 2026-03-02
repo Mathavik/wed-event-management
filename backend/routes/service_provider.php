@@ -7,7 +7,7 @@ use App\Http\Controllers\ServiceProviderController;
 Route::get('/services/{service_id}/providers', [ServiceProviderController::class, 'index']);
 
 // Register provider
-Route::post('/providers', [ServiceProviderController::class, 'store']);
+Route::post('/', [ServiceProviderController::class, 'store']);
 
 // Get single provider
 Route::get('/providers/{id}', [ServiceProviderController::class, 'show']);
