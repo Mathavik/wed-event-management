@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-
+import axiosInstance from "../axiosInstance";
 interface Service {
   id: number;
   title: string;
@@ -10,6 +10,8 @@ const RegisterProvider: React.FC = () => {
   const [formData, setFormData] = useState({
     service_id: "",
     name: "",
+    email: "",          
+    password: "",      
     description: "",
     experience: "",
     image: "",
@@ -19,11 +21,18 @@ const RegisterProvider: React.FC = () => {
   const [message, setMessage] = useState("");
 
   // Fetch services
-  useEffect(() => {
-    fetch("http://127.0.0.1:8000/api/services")
-      .then((res) => res.json())
-      .then((data) => setServices(data));
-  }, []);
+ useEffect(() => {
+  const fetchServices = async () => {
+    try {
+      const response = await axiosInstance.get("/services");
+      setServices(response.data);
+    } catch (error) {
+      console.error("Error fetching services:", error);
+    }
+  };
+
+  fetchServices();
+}, []);
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>
@@ -31,35 +40,24 @@ const RegisterProvider: React.FC = () => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+const handleSubmit = async (e: React.FormEvent) => {
+  e.preventDefault();
 
-    const response = await fetch("http://127.0.0.1:8000/api/providers", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Accept: "application/json",
-      },
-      body: JSON.stringify(formData),
-    });
+  try {
+    const response = await axiosInstance.post("/providers", formData);
 
-    const data = await response.json();
+    setMessage("Provider Registered Successfully ✅");
+    console.log(response.data);
 
-    if (response.ok) {
-      setMessage("Provider Registered Successfully ✅");
-      setFormData({
-        service_id: "",
-        name: "",
-        description: "",
-        experience: "",
-        image: "",
-        contact: "",
-      });
+  } catch (error: any) {
+    if (error.response) {
+      setMessage("Error: " + JSON.stringify(error.response.data));
     } else {
-      setMessage("Error: " + JSON.stringify(data));
+      setMessage("Server not reachable ❌");
     }
-  };
-
+    console.error(error);
+  }
+};
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100">
       <div className="bg-white p-8 rounded-xl shadow-lg w-full max-w-md">
@@ -74,6 +72,7 @@ const RegisterProvider: React.FC = () => {
         )}
 
         <form onSubmit={handleSubmit} className="space-y-4">
+          
           {/* Service Dropdown */}
           <select
             name="service_id"
@@ -95,6 +94,28 @@ const RegisterProvider: React.FC = () => {
             name="name"
             placeholder="Provider Name"
             value={formData.name}
+            onChange={handleChange}
+            required
+            className="w-full p-2 border rounded-lg"
+          />
+
+          {/* ✅ Email Field */}
+          <input
+            type="email"
+            name="email"
+            placeholder="Email Address"
+            value={formData.email}
+            onChange={handleChange}
+            required
+            className="w-full p-2 border rounded-lg"
+          />
+
+          {/* ✅ Password Field */}
+          <input
+            type="password"
+            name="password"
+            placeholder="Password"
+            value={formData.password}
             onChange={handleChange}
             required
             className="w-full p-2 border rounded-lg"
