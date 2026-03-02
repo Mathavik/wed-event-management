@@ -9,27 +9,27 @@ interface Service {
 }
 
 const Services = () => {
-  const { eventId } = useParams();   // ✅ Correct way
+  const { id } = useParams<{ id: string }>();
 
   const [services, setServices] = useState<Service[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    if (!eventId) {
+    if (!id) {
       setLoading(false);
       return;
     }
 
     axios
-      .get(`http://127.0.0.1:8000/api/services?event_id=${eventId}`)
+      .get(`http://127.0.0.1:8000/api/services?event_id=${id}`)
       .then((res) => setServices(res.data))
       .catch((err) => {
         console.error(err);
         setError("Failed to load services for this event");
       })
       .finally(() => setLoading(false));
-  }, [eventId]);
+  }, [id]);
 
   if (loading) return <p className="text-center py-20">Loading services...</p>;
   if (error) return <p className="text-center py-20 text-red-500">{error}</p>;
