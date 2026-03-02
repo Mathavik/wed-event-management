@@ -11,6 +11,8 @@ import AdminRoutes from "./admin/AdminRoutes";
 import MainLayout from "./layout/MainLayout";
 import ServiceProvider from "./pages/ServiceProvider/ServiceProvider";
 
+import VendorRoutes from "./vendor/layout/VendorRoutes";
+
 function App() {
   return (
     <Router>
@@ -29,6 +31,11 @@ function App() {
 
         {/* ✅ Admin Routes: Idhu MainLayout-ku veliya irukkuradhala Header varaadhu */}
         <Route path="/admin/*" element={<AdminRoutes />} />
+        {/* ✅ Vendor Routes (MainLayout-ku veliya) */}
+        <Route path="/vendor/*" element={<VendorRoutes />} />
+
+
+
       </Routes>
     </Router>
   );
