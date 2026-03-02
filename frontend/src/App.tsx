@@ -10,6 +10,9 @@ import ProfilePage from "./pages/ProfilePage/profilepage";
 import AdminRoutes from "./admin/AdminRoutes";
 import MainLayout from "./layout/MainLayout";
 import RegisterProvider from "./vendor/RegisterProvider";
+import ServiceProvider from "./pages/ServiceProvider/ServiceProvider";
+
+import VendorRoutes from "./vendor/layout/VendorRoutes";
 
 function App() {
   return (
@@ -27,10 +30,16 @@ function App() {
 
           <Route path="registerprovider" element={<RegisterProvider />} />
 
+         <Route path="/service-provider/:id" element={<ServiceProvider />} />
         </Route>
 
         {/* ✅ Admin Routes: Idhu MainLayout-ku veliya irukkuradhala Header varaadhu */}
         <Route path="/admin/*" element={<AdminRoutes />} />
+        {/* ✅ Vendor Routes (MainLayout-ku veliya) */}
+        <Route path="/vendor/*" element={<VendorRoutes />} />
+
+
+
       </Routes>
     </Router>
   );
