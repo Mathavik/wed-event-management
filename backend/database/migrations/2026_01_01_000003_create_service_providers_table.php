@@ -10,18 +10,16 @@ return new class extends Migration
     {
         Schema::create('service_providers', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('service_id');
+            
+            // Intha line thaan link pannuthu
+            $table->foreignId('service_id')->constrained('services')->onDelete('cascade');
+            
             $table->string('name');
             $table->text('description')->nullable();
             $table->string('experience')->nullable();
             $table->string('image')->nullable();
             $table->string('contact');
             $table->timestamps();
-
-            $table->foreign('service_id')
-                ->references('id')
-                ->on('services')
-                ->onDelete('cascade');
         });
     }
 

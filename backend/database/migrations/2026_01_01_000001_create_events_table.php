@@ -6,22 +6,26 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
+    /**
+     * Run the migrations.
+     */
     public function up(): void
     {
-        Schema::create('services', function (Blueprint $table) {
+        Schema::create('events', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('event_id'); // link to events table
             $table->string('title');
+            $table->text('description')->nullable();
             $table->string('image')->nullable();
+            $table->string('tags')->nullable();
             $table->timestamps();
-
-            // Foreign key constraint
-            $table->foreign('event_id')->references('id')->on('events')->onDelete('cascade');
         });
     }
 
+    /**
+     * Reverse the migrations.
+     */
     public function down(): void
     {
-        Schema::dropIfExists('services');
+        Schema::dropIfExists('events');
     }
 };
