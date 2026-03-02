@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate  } from "react-router-dom";
 import axios from "axios";
 
 interface Service {
@@ -14,6 +14,7 @@ const Services = () => {
   const [services, setServices] = useState<Service[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (!id) {
@@ -52,11 +53,21 @@ const Services = () => {
   className="h-64 w-full object-cover bg-gray-100"
 />
 
-            <div className="p-6 text-center">
-              <h3 className="text-xl font-semibold">{service.title}</h3>
-            </div>
-          </div>
-        ))}
+    <div className="p-6 text-center">
+      <h3 className="text-xl font-semibold mb-4">
+        {service.title}
+      </h3>
+
+      {/* 🔥 Explore Button */}
+      <button
+        onClick={() => navigate(`/service-provider/${service.id}`)}
+        className="bg-pink-500 text-white px-6 py-2 rounded-lg hover:bg-pink-600 transition"
+      >
+        Explore
+      </button>
+    </div>
+  </div>
+))}
       </div>
     </section>
   );

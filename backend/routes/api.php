@@ -22,6 +22,10 @@ Route::post('/login', [AuthController::class, 'login']);
 Route::prefix('services')->group(function () {
     require __DIR__.'/services.php';
 });
+Route::prefix('providers')->group(function () {
+    require __DIR__.'/service_provider.php';
+});
+
 
 // Event Routes
 Route::get('/events', [EventController::class, 'index']);

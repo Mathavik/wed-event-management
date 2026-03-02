@@ -1,19 +1,31 @@
+<?php
+
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
-class ServiceProvider extends Model
+
+class ServiceProviders extends Model
+
 {
     use HasFactory;
+
+    protected $table = 'service_providerss';
 
     protected $fillable = [
         'service_id',
         'name',
+        'email',
+        'password',
+        'contact',
         'description',
         'experience',
         'image',
-        'contact',
+    ];
+
+    protected $hidden = [
+        'password',
     ];
 
     // Relationship
