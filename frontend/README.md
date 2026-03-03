@@ -44,7 +44,13 @@ You don’t have to ever use `eject`. The curated feature set is suitable for sm
 The application uses a single `/login` page for all account types. Visitors can:
 
 - **Log in** with credentials for users, vendors or the predefined admin account. The backend returns the role and the frontend redirects to `/profilepage`, `/vendor/dashboard` or `/admin/dashboard` accordingly.
-- **Register** by clicking one of the buttons on the login page. The user registration form (`/register`) collects name, email, password and a bride/groom role. The vendor registration form (`/registerprovider`) asks for service details and contact information. After registering, everyone is redirected back to the login page.
+- **Register** by clicking one of the buttons on the login page. The user registration form (`/register`) collects name, email, password and a bride/groom role. The vendor registration form (`/registerprovider`) is now a multi‑step wizard:
+  1. Location (city, area)
+  2. Services the vendor offers along with prices
+  3. Photo albums upload (names + previews)
+  4. Account details (email, password, description, etc.)
+  Data is saved to the `service_providerss` table; additional JSON columns `service_pricing` and `albums` store the expanded information.
+  After registering, vendors are redirected back to the login page.
 
 Both forms post to the Laravel API; the backend ensures passwords are hashed and the correct table/role is used.
 

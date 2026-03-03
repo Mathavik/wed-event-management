@@ -36,12 +36,20 @@ class AuthTest extends TestCase
     public function test_vendor_registration_and_login()
     {
         $providerData = [
-            'service_id' => 1,
+            // primary service is optional now; supply as part of service_pricing instead
             'name' => 'Vendor One',
             'email' => 'vendor1@example.com',
             'password' => 'vendorpass',
             'contact' => '1234567890',
             'role' => 'vendor',
+            'city' => 'Chennai',
+            'area' => 'Downtown',
+            'service_pricing' => [
+                ['service_id' => 1, 'price' => 1500],
+            ],
+            'albums' => [
+                ['name' => 'mathavi', 'photos' => ['https://example.com/1.jpg']],
+            ],
         ];
 
         // ensure there is a service record (id 1)

@@ -31,10 +31,21 @@ class ServiceProviders extends Model
         'reviews_count',
         'is_featured',
         'portfolio_count',
+        // new JSON columns to support multi-service pricing and albums
+        'service_pricing',
+        'albums',
     ];
 
     protected $hidden = [
         'password',
+    ];
+
+    /**
+     * Cast JSON columns to arrays automatically.
+     */
+    protected $casts = [
+        'service_pricing' => 'array',
+        'albums' => 'array',
     ];
 
     // Relationship

@@ -60,7 +60,10 @@ This project uses a unified login API (`POST /api/login`) that checks three sour
 
 1. **Admin** – credentials are read from environment variables (`ADMIN_EMAIL`/`ADMIN_PASSWORD`). The admin record is created in the `users` table on first login if it does not already exist.
 2. **Users** – stored in the `users` table; the `role` column holds `bride`, `groom` or `admin`.
-3. **Vendors** – stored in the `service_providerss` table; the `role` column is always `vendor`.
+3. **Vendors** – stored in the `service_providerss` table; the `role` column is always `vendor`.  Recently additional columns were added (`service_pricing` and `albums` JSON fields) to support multi‑service vendors and photo album data; run the new migration if upgrading an existing database:
+   ```bash
+   php artisan migrate
+   ```
 
 Separate registration endpoints exist for users (`POST /api/register`) and providers (`POST /api/providers`). The React frontend provides a single login page and links to the appropriate registration forms.
 
