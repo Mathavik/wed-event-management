@@ -3,8 +3,9 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\EventController;
-use App\Http\Controllers\AdminUserController; // ← Add this line
-use App\Http\Controllers\AdminEventController; // ← Add this line
+use App\Http\Controllers\AdminUserController;
+use App\Http\Controllers\AdminEventController;
+use App\Http\Controllers\EnquiryController;
 
 
 // use App\Http\Controllers\EventserviceController; 
@@ -25,6 +26,11 @@ Route::prefix('services')->group(function () {
 Route::prefix('providers')->group(function () {
     require __DIR__.'/service_provider.php';
 });
+
+// Enquiries Routes
+Route::post('/enquiries', [EnquiryController::class, 'store']);
+Route::get('/enquiries', [EnquiryController::class, 'index']);
+Route::get('/enquiries/{id}', [EnquiryController::class, 'show']);
 
 
 // Event Routes
