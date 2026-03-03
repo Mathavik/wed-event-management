@@ -30,7 +30,12 @@ export default function AdminSidebar() {
           Users
         </Link>
 
-        <button className="w-full text-left p-2 rounded hover:bg-red-600">
+        <button 
+        onClick={() => {
+            localStorage.removeItem("admin");
+            window.location.href = "/";
+          }}
+          className="w-full text-left p-2 rounded hover:bg-red-600">
           Logout
         </button>
       </nav>
