@@ -31,8 +31,8 @@ const VendorSidebar = () => {
 
         <button
           onClick={() => {
-            localStorage.removeItem("vendorToken");
-            window.location.href = "/vendor/login";
+            localStorage.removeItem("user");
+            window.location.href = "/login";
           }}
           className="text-left text-red-500 mt-6"
         >

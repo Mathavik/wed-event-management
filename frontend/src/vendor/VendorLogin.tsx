@@ -11,16 +11,21 @@ const VendorLogin = () => {
     e.preventDefault();
 
     try {
-      const res = await axios.post("http://127.0.0.1:8000/api/admin/vendor/login", {
-     
+      const res = await axios.post("http://127.0.0.1:8000/api/login", {
         email,
         password,
       });
 
-      localStorage.setItem("vendorToken", res.data.token);
-      localStorage.setItem("vendorData", JSON.stringify(res.data.vendor));
-
-      navigate("/vendor/dashboard");
+      const user = res.data.user;
+      localStorage.setItem("user", JSON.stringify(user));
+      // redirect based on role
+      if (user.role === "vendor") {
+        navigate("/vendor/dashboard");
+      } else if (user.role === "admin") {
+        navigate("/admin/dashboard");
+      } else {
+        navigate("/profilepage");
+      }
     } catch (error) {
       alert("Invalid Login");
     }

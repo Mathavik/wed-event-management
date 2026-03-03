@@ -39,6 +39,15 @@ Instead, it will copy all the configuration files and the transitive dependencie
 
 You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
 
+## Authentication Flow
+
+The application uses a single `/login` page for all account types. Visitors can:
+
+- **Log in** with credentials for users, vendors or the predefined admin account. The backend returns the role and the frontend redirects to `/profilepage`, `/vendor/dashboard` or `/admin/dashboard` accordingly.
+- **Register** by clicking one of the buttons on the login page. The user registration form (`/register`) collects name, email, password and a bride/groom role. The vendor registration form (`/registerprovider`) asks for service details and contact information. After registering, everyone is redirected back to the login page.
+
+Both forms post to the Laravel API; the backend ensures passwords are hashed and the correct table/role is used.
+
 ## Learn More
 
 You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).

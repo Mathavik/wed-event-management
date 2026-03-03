@@ -22,20 +22,23 @@ public function store(Request $request)
     $request->validate([
         'service_id' => 'required|exists:services,id',
         'name' => 'required|string|max:255',
-        'email' => 'required|email|unique:service_providers,email',
+        'email' => 'required|email|unique:service_providerss,email',
         'password' => 'required|min:6',
         'contact' => 'required|string|max:255',
+        'role' => 'sometimes|in:vendor',
     ]);
 
     $provider = ServiceProviders::create([
         'service_id' => $request->service_id,
         'name' => $request->name,
-        'email' => $request->email,   // ✅ MUST BE HERE
-        'password' => Hash::make($request->password), // ✅ MUST BE HERE
+        'email' => $request->email,
+        'password' => Hash::make($request->password),
         'contact' => $request->contact,
         'description' => $request->description,
         'experience' => $request->experience,
         'image' => $request->image,
+        // always set vendor role
+        'role' => 'vendor',
     ]);
 
     return response()->json([

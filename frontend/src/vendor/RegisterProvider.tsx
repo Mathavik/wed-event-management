@@ -46,6 +46,7 @@ const handleSubmit = async (e: React.FormEvent) => {
   const payload = {
     ...formData,
     service_id: Number(formData.service_id),
+    role: "vendor", // always vendor
   };
 
   console.log("Sending:", payload); // Debug check
@@ -55,6 +56,10 @@ const handleSubmit = async (e: React.FormEvent) => {
 
     setMessage("Provider Registered Successfully ✅");
     console.log(response.data);
+    // after registration return to common login
+    setTimeout(() => {
+      window.location.href = "/login";
+    }, 1000);
 
   } catch (error: any) {
     if (error.response) {

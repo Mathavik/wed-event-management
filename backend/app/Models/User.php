@@ -7,7 +7,8 @@ use Illuminate\Database\Eloquent\Model;
 class User extends Model
 {
     protected $table = 'users';
-    public $timestamps = false;
+    // allow timestamp columns
+    public $timestamps = true;
 
     protected $fillable = [
         'name',
@@ -16,5 +17,9 @@ class User extends Model
         'password',
         'city',
         'role'
+    ];
+
+    protected $hidden = [
+        'password',
     ];
 }

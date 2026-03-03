@@ -22,6 +22,7 @@ class ServiceProviders extends Model
         'description',
         'experience',
         'image',
+        'role',
     ];
 
     protected $hidden = [

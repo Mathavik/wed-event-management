@@ -54,6 +54,33 @@ In order to ensure that the Laravel community is welcoming to all, please review
 
 If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
 
+## Custom Authentication
+
+This project uses a unified login API (`POST /api/login`) that checks three sources:
+
+1. **Admin** – credentials are read from environment variables (`ADMIN_EMAIL`/`ADMIN_PASSWORD`). The admin record is created in the `users` table on first login if it does not already exist.
+2. **Users** – stored in the `users` table; the `role` column holds `bride`, `groom` or `admin`.
+3. **Vendors** – stored in the `service_providerss` table; the `role` column is always `vendor`.
+
+Separate registration endpoints exist for users (`POST /api/register`) and providers (`POST /api/providers`). The React frontend provides a single login page and links to the appropriate registration forms.
+
+### Setup
+
+Before running the app, make sure to add the admin credentials to your `.env` file:
+
+```
+ADMIN_EMAIL=admin@example.com
+ADMIN_PASSWORD=secret
+```
+
+Run the migrations (a new migration adds the `role` column to `service_providerss`):
+
+```bash
+php artisan migrate
+```
+
+Tests covering the auth flows are located in `tests/Feature/AuthTest.php`.
+
 ## License
 
 The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
