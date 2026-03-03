@@ -23,6 +23,14 @@ class ServiceProviders extends Model
         'experience',
         'image',
         'role',
+        'city',
+        'area',
+        'price',
+        'price_type',
+        'rating',
+        'reviews_count',
+        'is_featured',
+        'portfolio_count',
     ];
 
     protected $hidden = [
