@@ -13,7 +13,6 @@ import RegisterProvider from "./vendor/RegisterProvider";
 import ServiceProvider from "./pages/ServiceProvider/ServiceProvider";
 
 import VendorRoutes from "./vendor/layout/VendorRoutes";
-import headerservice from "./pages/services/headerservice";
 import HeaderService from "./pages/services/headerservice";
 
 function App() {
