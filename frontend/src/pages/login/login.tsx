@@ -13,30 +13,37 @@ export default function Login() {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = async (e: any) => {
-    e.preventDefault();
-    try {
-      const res = await axios.post("http://localhost:8000/api/login", form);
-      const logged = res.data.user;
-      alert("Login Successful");
+const handleSubmit = async (e: any) => {
+  e.preventDefault();
+  try {
+    const res = await axios.post("http://localhost:8000/api/login", form);
+    const logged = res.data.user;
+
+    alert("Login Successful");
+
+    // Clear old data first
+    localStorage.removeItem("user");
+    localStorage.removeItem("admin");
+    localStorage.removeItem("vendor");
+
+    // Save based on role
+    if (logged.role === "admin") {
+      localStorage.setItem("admin", JSON.stringify(logged));
+      navigate("/admin/dashboard");
+    } 
+    else if (logged.role === "vendor") {
+      localStorage.setItem("vendor", JSON.stringify(logged));
+      navigate("/vendor/dashboard");
+    } 
+    else {
       localStorage.setItem("user", JSON.stringify(logged));
-      // redirect based on role stored in DB or returned object
-      switch (logged.role) {
-        case "vendor":
-          navigate("/vendor/dashboard");
-          break;
-        case "admin":
-          navigate("/admin/dashboard");
-          break;
-        default:
-          // regular user (bride/groom) goes to their profile or user dashboard
-          navigate("/profilepage");
-          break;
-      }
-    } catch (err: any) {
-      alert(err.response?.data?.message || "Login failed");
+      navigate("/profilepage");
     }
-  };
+
+  } catch (err: any) {
+    alert(err.response?.data?.message || "Login failed");
+  }
+};
 
   return (
     <div className="flex flex-col justify-center items-center h-screen bg-pink-100">

@@ -128,59 +128,59 @@ export default function Header() {
                         {/* CTA Button */}
 
                         <div className="hidden lg:flex items-center gap-4">
-                           {user ? (
-  <div className="relative">
-    
-    {/* Clickable User Area */}
-    <div
-      onClick={() => setDropdownOpen(!dropdownOpen)}
-      className="flex items-center gap-2 cursor-pointer select-none"
-    >
-      <div className="w-9 h-9 rounded-full bg-pink-500 text-white flex items-center justify-center font-bold">
-        {user?.name?.charAt(0).toUpperCase()}
-      </div>
-      <span style={{ color: "#C9A84C" }}>
-        {user?.name}
-      </span>
-    </div>
+                            {user ? (
+                                <div className="relative">
 
-    {/* Dropdown Menu */}
-    {dropdownOpen && (
-      <div
-        className="absolute right-0 mt-3 w-40 rounded shadow-lg overflow-hidden z-50"
-        style={{
-          background: "#1a0404",
-          border: "1px solid rgba(201,168,76,0.3)",
-        }}
-      >
-        <Link
-          to="/profilepage"
-          className="block px-4 py-2 text-sm hover:bg-[#2a0808]"
-          style={{ color: "#C9A84C" }}
-          onClick={() => setDropdownOpen(false)}
-        >
-          Profile
-        </Link>
+                                    {/* Clickable User Area */}
+                                    <div
+                                        onClick={() => setDropdownOpen(!dropdownOpen)}
+                                        className="flex items-center gap-2 cursor-pointer select-none"
+                                    >
+                                        <div className="w-9 h-9 rounded-full bg-pink-500 text-white flex items-center justify-center font-bold">
+                                            {user?.name?.charAt(0).toUpperCase()}
+                                        </div>
+                                        <span style={{ color: "#C9A84C" }}>
+                                            {user?.name}
+                                        </span>
+                                    </div>
 
-        <button
-          onClick={() => {
-            localStorage.removeItem("user");
-            setDropdownOpen(false);
-            window.location.href = "/";
-          }}
-          className="w-full text-left px-4 py-2 text-sm hover:bg-[#2a0808]"
-          style={{ color: "#C9A84C" }}
-        >
-          Logout
-        </button>
-      </div>
-    )}
-  </div>
-) : (
-  <Link to="/login" style={{ color: "#C9A84C" }}>
-    Login
-  </Link>
-)}
+                                    {/* Dropdown Menu */}
+                                    {dropdownOpen && (
+                                        <div
+                                            className="absolute right-0 mt-3 w-40 rounded shadow-lg overflow-hidden z-50"
+                                            style={{
+                                                background: "#1a0404",
+                                                border: "1px solid rgba(201,168,76,0.3)",
+                                            }}
+                                        >
+                                            <Link
+                                                to="/profilepage"
+                                                className="block px-4 py-2 text-sm hover:bg-[#2a0808]"
+                                                style={{ color: "#C9A84C" }}
+                                                onClick={() => setDropdownOpen(false)}
+                                            >
+                                                Profile
+                                            </Link>
+
+                                            <button
+                                                onClick={() => {
+                                                    localStorage.removeItem("user");
+                                                    setDropdownOpen(false);
+                                                    window.location.href = "/";
+                                                }}
+                                                className="w-full text-left px-4 py-2 text-sm hover:bg-[#2a0808]"
+                                                style={{ color: "#C9A84C" }}
+                                            >
+                                                Logout
+                                            </button>
+                                        </div>
+                                    )}
+                                </div>
+                            ) : (
+                                <Link to="/login" style={{ color: "#C9A84C" }}>
+                                    Login
+                                </Link>
+                            )}
                         </div>
 
                         {/* Mobile hamburger */}
