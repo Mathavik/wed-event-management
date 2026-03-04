@@ -50,6 +50,11 @@ class AuthTest extends TestCase
             'albums' => [
                 ['name' => 'mathavi', 'photos' => ['https://example.com/1.jpg']],
             ],
+            'subscription_duration' => 6,
+            'payment' => [
+                'status' => 'completed',
+                'transaction_id' => 'tx-12345',
+            ],
         ];
 
         // ensure there is a service record (id 1)
@@ -60,6 +65,11 @@ class AuthTest extends TestCase
              ->assertJsonFragment(['message' => 'Provider registered successfully']);
 
         $this->assertDatabaseHas('service_providerss', ['email' => 'vendor1@example.com', 'role' => 'vendor']);
+        $this->assertDatabaseHas('payments', [
+            'duration_months' => 6,
+            'amount' => 20000.00,
+            'status' => 'completed',
+        ]);
 
         // login
         $this->postJson('/api/login', ['email' => 'vendor1@example.com', 'password' => 'vendorpass'])

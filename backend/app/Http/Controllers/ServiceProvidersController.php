@@ -3,8 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Models\ServiceProviders;
+use App\Models\Payment;
 use Illuminate\Http\Request; 
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\DB;
 
 class ServiceProvidersController extends Controller
 {
@@ -25,14 +27,16 @@ class ServiceProvidersController extends Controller
 
 public function store(Request $request)
 {
-    // if the frontend sends service_pricing array we use that; otherwise fallback to single service_id
+    // subscription and payment validation added
     $request->validate([
         'service_id' => 'nullable|exists:services,id',
         'service_pricing' => 'nullable|array',
         'service_pricing.*.service_id' => 'required_with:service_pricing|exists:services,id',
         'service_pricing.*.price' => 'required_with:service_pricing|numeric|min:0',
-        'name' => 'required|string|max:255',
-        'email' => 'required|email|unique:service_providerss,email',
+        'subscription_duration' => 'required|in:6,12',
+        'payment' => 'required|array',
+        'payment.status' => 'required|in:completed',
+        'payment.transaction_id' => 'required|string',
         'password' => 'required|min:6',
         'contact' => 'required|string|max:255',
         'city' => 'nullable|string|max:255',
@@ -84,11 +88,34 @@ public function store(Request $request)
         });
     }
 
-    $provider = ServiceProviders::create($providerData);
+    // determine amount based on subscription
+    $duration = (int) $request->subscription_duration;
+    $amount = $duration === 12 ? 35000.00 : 20000.00;
+
+    // persist provider and payment atomically
+    $provider = null;
+    $payment = null;
+
+    \DB::transaction(function () use (&$provider, &$payment, $providerData, $duration, $amount, $request) {
+        $provider = ServiceProviders::create($providerData);
+
+        $paymentData = [
+            'provider_id' => $provider->id,
+            'duration_months' => $duration,
+            'amount' => $amount,
+            'status' => $request->input('payment.status'),
+            'transaction_id' => $request->input('payment.transaction_id'),
+            'starts_at' => now(),
+            'ends_at' => now()->addMonths($duration),
+        ];
+
+        $payment = \App\Models\Payment::create($paymentData);
+    });
 
     return response()->json([
         'message' => 'Provider registered successfully',
-        'data' => $provider
+        'data' => $provider,
+        'payment' => $payment
     ], 201);
 }
 

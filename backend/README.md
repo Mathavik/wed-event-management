@@ -61,6 +61,8 @@ This project uses a unified login API (`POST /api/login`) that checks three sour
 1. **Admin** – credentials are read from environment variables (`ADMIN_EMAIL`/`ADMIN_PASSWORD`). The admin record is created in the `users` table on first login if it does not already exist.
 2. **Users** – stored in the `users` table; the `role` column holds `bride`, `groom` or `admin`.
 3. **Vendors** – stored in the `service_providerss` table; the `role` column is always `vendor`.  Recently additional columns were added (`service_pricing` and `albums` JSON fields) to support multi‑service vendors and photo album data; run the new migration if upgrading an existing database:
+
+4. **Payments / Subscriptions** – each provider must pre‑pay for a 6‑ or 12‑month package (₹20 000 or ₹35 000 respectively).  A new `payments` table records the duration, amount, status and optional transaction ID; registration will only succeed when a completed payment record is provided.
    ```bash
    php artisan migrate
    ```

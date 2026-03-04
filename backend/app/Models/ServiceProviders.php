@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use App\Models\Payment;
 
 
 class ServiceProviders extends Model
@@ -52,5 +53,13 @@ class ServiceProviders extends Model
     public function service()
     {
         return $this->belongsTo(Service::class);
+    }
+
+    /**
+     * A provider can have multiple payments/subscriptions.
+     */
+    public function payments()
+    {
+        return $this->hasMany(Payment::class, 'provider_id');
     }
 }
