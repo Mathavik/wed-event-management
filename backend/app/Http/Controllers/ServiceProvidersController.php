@@ -7,6 +7,7 @@ use App\Models\Payment;
 use Illuminate\Http\Request; 
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 
 class ServiceProvidersController extends Controller
 {
@@ -43,10 +44,13 @@ public function store(Request $request)
         'area' => 'nullable|string|max:255',
         'role' => 'sometimes|in:vendor',
         'albums' => 'nullable|array',
-        // allow empty names (frontend will show warning but not break registration)
-        'albums.*.name' => 'sometimes|string|max:255',
+        // allow empty or missing names; use nullable so blank string passes
+        'albums.*.name' => 'nullable|string|max:255',
         'albums.*.photos' => 'nullable|array',
         'albums.*.photos.*' => 'string',
+        'description' => 'nullable|string',
+        'experience' => 'nullable|string|max:255',
+        'image' => 'nullable|string',
     ]);
 
     $providerData = [
@@ -56,6 +60,7 @@ public function store(Request $request)
         'contact' => $request->contact,
         'description' => $request->description,
         'experience' => $request->experience,
+        // image may come in as a base64 string; we'll process it below
         'image' => $request->image,
         'city' => $request->city,
         'area' => $request->area,
@@ -66,6 +71,19 @@ public function store(Request $request)
     if ($request->filled('service_id')) {
         $providerData['service_id'] = $request->service_id;
     }
+
+    // decode & store base64 image if provided
+    if (!empty($request->image) && preg_match('/^data:image\/([a-zA-Z]+);base64,/', $request->image)) {
+        $matches = [];
+        preg_match('/^data:image\/(\w+);base64,/', $request->image, $matches);
+        $extension = $matches[1] ?? 'png';
+        $fileName = 'provider_' . time() . '.' . $extension;
+        $fileData = base64_decode(preg_replace('#^data:image/\w+;base64,#i', '', $request->image));
+        // ensure directory exists
+        \Illuminate\Support\Facades\Storage::disk('public')->put('uploads/providers/' . $fileName, $fileData);
+        $providerData['image'] = $fileName;
+    }
+
 
     if ($request->has('service_pricing') && 
         \Illuminate\Support\Facades\Schema::hasColumn('service_providerss','service_pricing')) {

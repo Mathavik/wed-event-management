@@ -48,7 +48,8 @@ class AuthTest extends TestCase
                 ['service_id' => 1, 'price' => 1500],
             ],
             'albums' => [
-                ['name' => 'mathavi', 'photos' => ['https://example.com/1.jpg']],
+                // test empty album name, should still validate
+                ['name' => '', 'photos' => ['https://example.com/1.jpg']],
             ],
             'subscription_duration' => 6,
             'payment' => [
