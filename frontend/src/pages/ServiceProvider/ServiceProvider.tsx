@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import axiosInstance from "../../axiosInstance";
 
 interface Provider {
@@ -31,7 +31,7 @@ interface EnquiryForm {
 
 const ServiceProvider = () => {
   const { id } = useParams<{ id: string }>();
-
+  const navigate = useNavigate();
   const [providers, setProviders] = useState<Provider[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -40,7 +40,7 @@ const ServiceProvider = () => {
   const [submitting, setSubmitting] = useState(false);
   const [showThankYou, setShowThankYou] = useState(false);
   const [submittedProvider, setSubmittedProvider] = useState<Provider | null>(null);
-
+const [showAuthPopup, setShowAuthPopup] = useState(false);
   const [formData, setFormData] = useState<EnquiryForm>({
     provider_id: 0,
     wedding_city: "",
@@ -70,6 +70,22 @@ const ServiceProvider = () => {
   }, [id]);
 
   const handleEnquiryClick = (provider: Provider) => {
+    const token = localStorage.getItem("token");
+    const user = localStorage.getItem("user"); // if you store user info
+
+    // If not registered (no user data at all)
+    if (!user) {
+      navigate("/register");
+      return;
+    }
+
+    // If registered but not logged in (no token)
+    if (!token) {
+      navigate("/login");
+      return;
+    }
+
+    // If logged in → show form
     setSelectedProvider(provider);
     setFormData({
       ...formData,
@@ -116,7 +132,7 @@ const ServiceProvider = () => {
       const response = await axiosInstance.post("/enquiries", formData);
       console.log("Enquiry submitted:", response.data);
       setShowEnquiryForm(false);
-      
+
       // Use provider data from the response if available
       if (response.data.data && response.data.data.provider) {
         setSubmittedProvider({
@@ -126,7 +142,7 @@ const ServiceProvider = () => {
       } else {
         setSubmittedProvider(selectedProvider);
       }
-      
+
       setShowThankYou(true);
     } catch (err) {
       console.error("Error submitting enquiry:", err);
@@ -239,6 +255,7 @@ const ServiceProvider = () => {
 
                 {/* Send Enquiry Button */}
                 <button
+                
                   onClick={() => handleEnquiryClick(provider)}
                   className="w-full mt-4 bg-red-500 hover:bg-red-600 text-white font-semibold py-2 px-4 rounded-lg transition duration-200"
                 >
@@ -411,11 +428,10 @@ const ServiceProvider = () => {
                         key={service}
                         type="button"
                         onClick={() => handleServiceToggle(service)}
-                        className={`px-4 py-2 rounded-full font-medium transition ${
-                          formData.interested_services.includes(service)
+                        className={`px-4 py-2 rounded-full font-medium transition ${formData.interested_services.includes(service)
                             ? "bg-pink-500 text-white"
                             : "bg-gray-200 text-gray-700 hover:bg-gray-300"
-                        }`}
+                          }`}
                       >
                         {service}
                       </button>
@@ -471,7 +487,7 @@ const ServiceProvider = () => {
                   Thank you!
                 </h2>
                 <p className="text-gray-600">
-                  Thank you for your interest in <span className="font-semibold">{submittedProvider.name}</span>. 
+                  Thank you for your interest in <span className="font-semibold">{submittedProvider.name}</span>.
                   Our team will contact you shortly to share this vendor's details.
                 </p>
               </div>
