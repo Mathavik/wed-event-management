@@ -6,11 +6,11 @@ import VendorProfile from "../pages/VendorProfile";
 
 
 
-import VendorProtected from "./VendorProtected";
+// import VendorProtected from "./VendorProtected";
 
 export default function VendorRoutes() {
   return (
-    <VendorProtected>
+    // <VendorProtected>
       <Routes>
         <Route path="/*" element={<VendorLayout />}>
           <Route path="dashboard" element={<VendorDashboard />} />
@@ -18,6 +18,6 @@ export default function VendorRoutes() {
           <Route path="profile" element={<VendorProfile />} />
         </Route>
       </Routes>
-    </VendorProtected>
+    // </VendorProtected>
   );
 }

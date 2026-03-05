@@ -1,6 +1,7 @@
 import { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import axiosInstance from "../../axiosInstance";
 
 export default function Login() {
   const navigate = useNavigate();
@@ -16,7 +17,7 @@ export default function Login() {
 const handleSubmit = async (e: any) => {
   e.preventDefault();
   try {
-    const res = await axios.post("http://localhost:8000/api/login", form);
+  const res = await axiosInstance.post("/login", form);
     const logged = res.data.user;
 
     alert("Login Successful");
