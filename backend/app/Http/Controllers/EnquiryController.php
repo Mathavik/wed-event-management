@@ -110,4 +110,32 @@ class EnquiryController extends Controller
             'message' => 'Enquiry deleted successfully'
         ]);
     }
+
+    public function vendorEnquiries($providerId)
+{
+    $enquiries = Enquiry::where('provider_id', $providerId)
+        ->orderBy('created_at', 'desc')
+        ->get();
+
+    return response()->json([
+        'message' => 'Vendor enquiries retrieved successfully',
+        'data' => $enquiries
+    ]);
+}
+
+public function vendorBookings(Request $request)
+{
+    $providerId = $request->provider_id;
+
+    $enquiries = Enquiry::where('provider_id', $providerId)
+        ->orderBy('created_at', 'desc')
+        ->get();
+
+    return response()->json([
+        "message" => "Vendor bookings fetched",
+        "data" => $enquiries
+    ]);
+}
+
+
 }

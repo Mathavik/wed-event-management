@@ -31,8 +31,9 @@ Route::prefix('providers')->group(function () {
 Route::post('/enquiries', [EnquiryController::class, 'store']);
 Route::get('/enquiries', [EnquiryController::class, 'index']);
 Route::get('/enquiries/{id}', [EnquiryController::class, 'show']);
-
-
+Route::get('/vendor/enquiries/{providerId}', [EnquiryController::class, 'vendorEnquiries']);
+Route::get('/vendor/bookings/{provider_id}', [EnquiryController::class, 'vendorBookings']);
+Route::delete('/enquiries/{id}', [EnquiryController::class, 'destroy']);
 // Event Routes
 Route::get('/events', [EventController::class, 'index']);
 Route::get('/events/{id}', [EventController::class, 'show']);
