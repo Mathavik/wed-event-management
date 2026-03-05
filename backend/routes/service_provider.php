@@ -14,3 +14,5 @@ Route::get('/providers/{id}', [ServiceProvidersController::class, 'show']);
 
 // Delete provider
 Route::delete('/providers/{id}', [ServiceProvidersController::class, 'destroy']);
+
+Route::get('/', [ServiceProvidersController::class, 'allProviders']);

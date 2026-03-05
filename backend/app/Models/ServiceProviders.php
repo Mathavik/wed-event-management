@@ -47,6 +47,7 @@ class ServiceProviders extends Model
     protected $casts = [
         'service_pricing' => 'array',
         'albums' => 'array',
+        'price' => 'decimal:2',
     ];
 
     // Relationship
