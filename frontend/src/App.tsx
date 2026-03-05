@@ -11,6 +11,7 @@ import AdminRoutes from "./admin/AdminRoutes";
 import MainLayout from "./layout/MainLayout";
 import RegisterProvider from "./vendor/RegisterProvider";
 import ServiceProvider from "./pages/ServiceProvider/ServiceProvider";
+import Payment from "./pages/Payment";
 
 import VendorRoutes from "./vendor/layout/VendorRoutes";
 import HeaderService from "./pages/services/headerservice";
@@ -31,6 +32,7 @@ function App() {
         <Route path="/headerservice" element={<HeaderService/>} />
 
           <Route path="registerprovider" element={<RegisterProvider />} />
+          <Route path="payment" element={<Payment />} />
 
          <Route path="/service-provider/:id" element={<ServiceProvider />} />
         </Route>

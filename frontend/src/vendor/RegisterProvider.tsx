@@ -5,11 +5,20 @@ import axiosInstance from "../axiosInstance";
 interface Service {
   id: number;
   title: string;
+  image?: string;
+  image_url?: string;
+}
+
+interface SelectedService {
+  service_id: number;
+  price: number;
+  price_type: string;
 }
 
 const RegisterProvider: React.FC = () => {
   const [step, setStep] = useState(1);
   const [services, setServices] = useState<Service[]>([]);
+  const [selectedServices, setSelectedServices] = useState<SelectedService[]>([]);
   const [photos, setPhotos] = useState<File[]>([]);
   const [previewUrls, setPreviewUrls] = useState<string[]>([]);
   const [loading, setLoading] = useState(false);
@@ -24,11 +33,8 @@ const RegisterProvider: React.FC = () => {
   const navigate = useNavigate();
 
   const [formData, setFormData] = useState({
-    service_id: "",
     city: "",
     area: "",
-    price: "",
-    price_type: "",
     album_name: "",
     name: "",
     email: "",
@@ -90,6 +96,10 @@ const RegisterProvider: React.FC = () => {
   // 🔥 REGISTER FUNCTION (DB STORE)
   const handleRegister = async () => {
     try {
+      if (selectedServices.length === 0) {
+        alert("Please select at least one service");
+        return;
+      }
       if (!transactionId) {
         alert("Please enter a valid transaction ID");
         return;
@@ -103,23 +113,10 @@ const RegisterProvider: React.FC = () => {
         profileImageBase64 = encoded[0];
       }
 
-      // build service_pricing so backend can save JSON
-      const servicePricing = [];
-      if (formData.service_id) {
-        servicePricing.push({
-          service_id: Number(formData.service_id),
-          price: formData.price ? Number(formData.price) : null,
-        });
-      }
-
       const payload = {
-        service_id: Number(formData.service_id),
+        service_pricing: selectedServices,
         city: formData.city,
         area: formData.area,
-        // keep fields for backwards-compatibility; controller will null them out
-        price: formData.price,
-        price_type: formData.price_type,
-        service_pricing: servicePricing,
         name: formData.name,
         email: formData.email,
         password: formData.password,
@@ -127,7 +124,6 @@ const RegisterProvider: React.FC = () => {
         description: formData.description,
         experience: formData.experience,
         role: "vendor",
-        // profile image will be base64 encoded if available
         image: profileImageBase64,
         albums: [
           {
@@ -147,7 +143,7 @@ const RegisterProvider: React.FC = () => {
 
       alert("Registration Successful ✅");
 
-      navigate("/payment");
+      navigate("/vendor/dashboard");
 
     } catch (error: any) {
       console.error(error);
@@ -159,243 +155,321 @@ const RegisterProvider: React.FC = () => {
     }
   };
 
+  const toggleService = (serviceId: number) => {
+    const existing = selectedServices.find(s => s.service_id === serviceId);
+    if (existing) {
+      setSelectedServices(selectedServices.filter(s => s.service_id !== serviceId));
+    } else {
+      setSelectedServices([...selectedServices, { service_id: serviceId, price: 0, price_type: "" }]);
+    }
+  };
+
+  const updateServicePrice = (serviceId: number, price: number, priceType: string) => {
+    setSelectedServices(selectedServices.map(s => 
+      s.service_id === serviceId ? { ...s, price, price_type: priceType } : s
+    ));
+  };
+
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100">
-      <div className="bg-white p-8 rounded-xl shadow-lg w-full max-w-md">
+    <div className="min-h-screen bg-gradient-to-br from-pink-50 to-purple-50 py-10 px-4">
+      <div className="max-w-2xl mx-auto">
+        {/* Header */}
+        <div className="text-center mb-8">
+          <h1 className="text-3xl font-bold text-purple-900 mb-2">Vendor Registration</h1>
+          <p className="text-gray-600">Join our wedding community</p>
+          <div className="flex justify-center gap-2 mt-4">
+            {[1, 2, 3, 4, 5, 6, 7].map((s) => (
+              <div key={s} className={`h-2 w-8 rounded-full ${step >= s ? 'bg-pink-600' : 'bg-gray-300'}`}></div>
+            ))}
+          </div>
+        </div>
 
-        {/* STEP 1 */}
-        {step === 1 && (
-          <>
-            <h2 className="text-xl font-bold mb-4">Select Service</h2>
-            <select
-              name="service_id"
-              value={formData.service_id}
-              onChange={handleChange}
-              className="w-full p-2 border rounded-lg"
-            >
-              <option value="">Select Service</option>
-              {services.map((service) => (
-                <option key={service.id} value={service.id}>
-                  {service.title}
-                </option>
-              ))}
-            </select>
-            <button onClick={nextStep} className="mt-4 w-full bg-pink-600 text-white py-2 rounded-lg">
-              Next
-            </button>
-          </>
-        )}
+        <div className="bg-white rounded-2xl shadow-xl p-8">
 
-        {/* STEP 2 */}
-        {step === 2 && (
-          <>
-            <h2 className="text-xl font-bold mb-4">Enter Your Location</h2>
-            <input name="city" placeholder="City"
-              value={formData.city}
-              onChange={handleChange}
-              className="w-full p-2 border rounded-lg mb-3"
-            />
-            <input name="area" placeholder="Area"
-              value={formData.area}
-              onChange={handleChange}
-              className="w-full p-2 border rounded-lg mb-3"
-            />
-            <button onClick={prevStep} className="mr-2 bg-gray-400 text-white px-4 py-2 rounded">
-              Back
-            </button>
-            <button onClick={nextStep} className="bg-pink-600 text-white px-4 py-2 rounded">
-              Next
-            </button>
-          </>
-        )}
+          {/* STEP 1 - Services with Images */}
+          {step === 1 && (
+            <>
+              <h2 className="text-2xl font-bold mb-2 text-purple-900">Select Services</h2>
+              <p className="text-gray-600 mb-6">Choose at least one service you provide (select multiple)</p>
+              
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+                {services.map((service) => {
+                  const isSelected = selectedServices.some(s => s.service_id === service.id);
+                  return (
+                    <div key={service.id} 
+                      className={`relative border-2 rounded-lg overflow-hidden cursor-pointer transition-all ${
+                        isSelected ? 'border-pink-600 shadow-lg' : 'border-gray-200 hover:border-pink-300'
+                      }`}
+                      onClick={() => toggleService(service.id)}
+                    >
+                      {/* Service Image */}
+                      {service.image_url ? (
+                        <img src={service.image_url} alt={service.title} className="w-full h-32 object-cover" />
+                      ) : (
+                        <div className="w-full h-32 bg-gray-200 flex items-center justify-center">
+                          <span className="text-gray-400">No image</span>
+                        </div>
+                      )}
+                      
+                      {/* Service Title & Checkbox */}
+                      <div className="p-4">
+                        <div className="flex items-center gap-3">
+                          <input
+                            type="checkbox"
+                            checked={isSelected}
+                            onChange={() => toggleService(service.id)}
+                            className="w-5 h-5 rounded text-pink-600 cursor-pointer"
+                          />
+                          <label className="font-semibold text-gray-800 cursor-pointer flex-1">{service.title}</label>
+                        </div>
+                      </div>
 
-        {/* STEP 3 */}
-        {step === 3 && (
-          <>
-            <h2 className="text-xl font-bold mb-4">Service & Pricing</h2>
-            <input name="price" placeholder="Enter Price"
-              value={formData.price}
-              onChange={handleChange}
-              className="w-full p-2 border rounded-lg mb-3"
-            />
-            <select name="price_type"
-              value={formData.price_type}
-              onChange={handleChange}
-              className="w-full p-2 border rounded-lg mb-3"
-            >
-              <option value="">Select Price Type</option>
-              <option value="per_hour">Per Hour</option>
-              <option value="per_day">Per Day</option>
-              <option value="per_event">Per Event</option>
-            </select>
-            <button onClick={prevStep} className="mr-2 bg-gray-400 text-white px-4 py-2 rounded">
-              Back
-            </button>
-            <button onClick={nextStep} className="bg-pink-600 text-white px-4 py-2 rounded">
-              Next
-            </button>
-          </>
-        )}
+                      {/* Price Input for Selected Services */}
+                      {isSelected && (
+                        <div className="bg-pink-50 p-3 border-t border-pink-200" onClick={(e) => e.stopPropagation()}>
+                          <input
+                            type="number"
+                            placeholder="Enter price (e.g., 50000)"
+                            min="0"
+                            step="100"
+                            value={selectedServices.find(s => s.service_id === service.id)?.price ?? ''}
+                            onChange={(e) => {
+                              const newPrice = e.target.value === '' ? 0 : Number(e.target.value);
+                              updateServicePrice(
+                                service.id, 
+                                newPrice, 
+                                selectedServices.find(s => s.service_id === service.id)?.price_type || ''
+                              );
+                            }}
+                            className="w-full p-2 border border-pink-300 rounded mb-2 text-sm focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-pink-500"
+                          />
+                          <select
+                            value={selectedServices.find(s => s.service_id === service.id)?.price_type ?? ''}
+                            onChange={(e) => updateServicePrice(
+                              service.id, 
+                              selectedServices.find(s => s.service_id === service.id)?.price ?? 0, 
+                              e.target.value
+                            )}
+                            className="w-full p-2 border border-pink-300 rounded text-sm focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-pink-500"
+                          >
+                            <option value="">Select Type</option>
+                            <option value="per_hour">Per Hour</option>
+                            <option value="per_day">Per Day</option>
+                            <option value="per_event">Per Event</option>
+                          </select>
+                        </div>
+                      )}
+                    </div>
+                  );
+                })}
+              </div>
 
-        {/* STEP 4 */}
-        {step === 4 && (
-          <>
-            <h2 className="text-xl font-bold mb-4">Enter Your Details</h2>
-
-            <input name="name" placeholder="Your Name"
-              value={formData.name}
-              onChange={handleChange}
-              className="w-full p-2 border rounded-lg mb-3"
-            />
-
-            <input type="email" name="email" placeholder="Email"
-              value={formData.email}
-              onChange={handleChange}
-              className="w-full p-2 border rounded-lg mb-3"
-            />
-
-            <input type="password" name="password" placeholder="Password"
-              value={formData.password}
-              onChange={handleChange}
-              className="w-full p-2 border rounded-lg mb-3"
-            />
-
-            <input name="contact" placeholder="Contact Number"
-              value={formData.contact}
-              onChange={handleChange}
-              className="w-full p-2 border rounded-lg mb-3"
-            />
-
-            <textarea name="description" placeholder="Short description about yourself"
-              value={formData.description}
-              onChange={handleChange}
-              className="w-full p-2 border rounded-lg mb-3"
-            />
-
-            <input name="experience" placeholder="Experience (years or details)"
-              value={formData.experience}
-              onChange={handleChange}
-              className="w-full p-2 border rounded-lg mb-3"
-            />
-
-            <div className="mb-3">
-              <label className="block mb-1">Profile Image</label>
-              <input type="file" accept="image/*" onChange={handleProfileImageUpload} />
-              {profilePreview && (
-                <img src={profilePreview} alt="Profile preview" className="mt-2 w-24 h-24 object-cover rounded-full" />
+              {selectedServices.length === 0 && (
+                <div className="bg-yellow-50 border border-yellow-200 text-yellow-800 p-3 rounded-lg mb-6">
+                  Please select at least one service to continue
+                </div>
               )}
-            </div>
 
-            <button onClick={prevStep} className="mr-2 bg-gray-400 text-white px-4 py-2 rounded">
-              Back
-            </button>
-            <button onClick={nextStep} className="bg-pink-600 text-white px-4 py-2 rounded">
-              Next
-            </button>
-          </>
-        )}
+              <div className="flex gap-3">
+                <button onClick={nextStep} disabled={selectedServices.length === 0} className="flex-1 bg-pink-600 disabled:bg-gray-300 text-white py-3 rounded-lg font-semibold hover:bg-pink-700">
+                  Next
+                </button>
+              </div>
+            </>
+          )}
 
-        {/* STEP 5 */}
-        {step === 5 && (
-          <>
-            <h2 className="text-xl font-bold mb-4">Add Album</h2>
+          {/* STEP 2 - Location */}
+          {step === 2 && (
+            <>
+              <h2 className="text-2xl font-bold mb-2 text-purple-900">Your Location</h2>
+              <p className="text-gray-600 mb-6">Where are you based?</p>
+              
+              <input name="city" placeholder="City" value={formData.city} onChange={handleChange}
+                className="w-full p-3 border border-gray-300 rounded-lg mb-4"
+              />
+              <input name="area" placeholder="Area/Region" value={formData.area} onChange={handleChange}
+                className="w-full p-3 border border-gray-300 rounded-lg mb-6"
+              />
 
-            <input name="album_name" placeholder="Album Name"
-              value={formData.album_name}
-              onChange={handleChange}
-              className="w-full p-2 border rounded-lg mb-3"
-            />
+              <div className="flex gap-3">
+                <button onClick={prevStep} className="flex-1 bg-gray-300 text-gray-800 py-3 rounded-lg font-semibold hover:bg-gray-400">
+                  Back
+                </button>
+                <button onClick={nextStep} className="flex-1 bg-pink-600 text-white py-3 rounded-lg font-semibold hover:bg-pink-700">
+                  Next
+                </button>
+              </div>
+            </>
+          )}
 
-            <input type="file" multiple onChange={handlePhotoUpload} className="mb-3" />
+          {/* STEP 3 - Profile Info */}
+          {step === 3 && (
+            <>
+              <h2 className="text-2xl font-bold mb-2 text-purple-900">Your Profile</h2>
+              <p className="text-gray-600 mb-6">Tell us about yourself</p>
+              
+              <input name="name" placeholder="Full Name" value={formData.name} onChange={handleChange}
+                className="w-full p-3 border border-gray-300 rounded-lg mb-4"
+              />
+              <input type="email" name="email" placeholder="Email" value={formData.email} onChange={handleChange}
+                className="w-full p-3 border border-gray-300 rounded-lg mb-4"
+              />
+              <input type="password" name="password" placeholder="Password" value={formData.password} onChange={handleChange}
+                className="w-full p-3 border border-gray-300 rounded-lg mb-4"
+              />
+              <input name="contact" placeholder="Contact Number" value={formData.contact} onChange={handleChange}
+                className="w-full p-3 border border-gray-300 rounded-lg mb-4"
+              />
+              <textarea name="description" placeholder="About yourself" value={formData.description} onChange={handleChange}
+                className="w-full p-3 border border-gray-300 rounded-lg mb-4 h-24"
+              />
+              <input name="experience" placeholder="Experience (e.g., 5 years)" value={formData.experience} onChange={handleChange}
+                className="w-full p-3 border border-gray-300 rounded-lg mb-4"
+              />
 
-            <button onClick={prevStep} className="mr-2 bg-gray-400 text-white px-4 py-2 rounded">
-              Back
-            </button>
-            <button onClick={nextStep} className="bg-pink-600 text-white px-4 py-2 rounded">
-              Next
-            </button>
-          </>
-        )}
+              <div className="mb-6">
+                <label className="block font-semibold text-gray-700 mb-2">Profile Picture</label>
+                <input type="file" accept="image/*" onChange={handleProfileImageUpload} className="w-full mb-3" />
+                {profilePreview && (
+                  <img src={profilePreview} alt="Profile" className="w-20 h-20 object-cover rounded-full" />
+                )}
+              </div>
 
-        {/* STEP 6 */}
-        {step === 6 && (
-          <>
-            <h2 className="text-xl font-bold mb-4">Preview Photos</h2>
+              <div className="flex gap-3">
+                <button onClick={prevStep} className="flex-1 bg-gray-300 text-gray-800 py-3 rounded-lg font-semibold hover:bg-gray-400">
+                  Back
+                </button>
+                <button onClick={nextStep} className="flex-1 bg-pink-600 text-white py-3 rounded-lg font-semibold hover:bg-pink-700">
+                  Next
+                </button>
+              </div>
+            </>
+          )}
 
-            <div className="grid grid-cols-3 gap-2 mb-4">
-              {previewUrls.map((url, index) => (
-                <img key={index} src={url} className="h-20 w-full object-cover rounded" />
-              ))}
-            </div>
+          {/* STEP 4 - Portfolio */}
+          {step === 4 && (
+            <>
+              <h2 className="text-2xl font-bold mb-2 text-purple-900">Your Portfolio</h2>
+              <p className="text-gray-600 mb-6">Showcase your best work</p>
+              
+              <input name="album_name" placeholder="Album Name (e.g., Wedding 2023)" value={formData.album_name} onChange={handleChange}
+                className="w-full p-3 border border-gray-300 rounded-lg mb-4"
+              />
+              <label className="block font-semibold text-gray-700 mb-2">Upload Photos</label>
+              <input type="file" multiple accept="image/*" onChange={handlePhotoUpload} className="w-full mb-4" />
+              <p className="text-sm text-gray-600 mb-6">{photos.length} photos selected</p>
 
-            <button onClick={prevStep} className="mr-2 bg-gray-400 text-white px-4 py-2 rounded">
-              Back
-            </button>
-            <button onClick={nextStep} className="bg-pink-600 text-white px-4 py-2 rounded">
-              Next
-            </button>
-          </>
-        )}
+              <div className="flex gap-3">
+                <button onClick={prevStep} className="flex-1 bg-gray-300 text-gray-800 py-3 rounded-lg font-semibold hover:bg-gray-400">
+                  Back
+                </button>
+                <button onClick={nextStep} className="flex-1 bg-pink-600 text-white py-3 rounded-lg font-semibold hover:bg-pink-700">
+                  Next
+                </button>
+              </div>
+            </>
+          )}
 
-        {/* STEP 7 - subscription/payment */}
-        {step === 7 && (
-          <>
-            <h2 className="text-xl font-bold mb-4">Choose Package</h2>
-            <div className="mb-4">
-              <label className="mr-4">
-                <input
-                  type="radio"
-                  value={6}
-                  checked={subscriptionDuration === 6}
-                  onChange={() => setSubscriptionDuration(6 as 6|12)}
-                />{' '}
-                6 Months (₹20,000)
-              </label>
-              <label>
-                <input
-                  type="radio"
-                  value={12}
-                  checked={subscriptionDuration === 12}
-                  onChange={() => setSubscriptionDuration(12 as 6|12)}
-                />{' '}
-                12 Months (₹35,000)
-              </label>
-            </div>
-            <input
-              name="transaction_id"
-              placeholder="Transaction ID"
-              value={transactionId}
-              onChange={(e) => setTransactionId(e.target.value)}
-              className="w-full p-2 border rounded-lg mb-3"
-            />
+          {/* STEP 5 - Preview */}
+          {step === 5 && (
+            <>
+              <h2 className="text-2xl font-bold mb-2 text-purple-900">Preview</h2>
+              <p className="text-gray-600 mb-6">Your portfolio photos</p>
+              
+              {previewUrls.length > 0 ? (
+                <div className="grid grid-cols-3 gap-3 mb-6">
+                  {previewUrls.map((url, index) => (
+                    <img key={index} src={url} alt={`Preview ${index}`} className="h-24 w-full object-cover rounded-lg" />
+                  ))}
+                </div>
+              ) : (
+                <div className="bg-gray-100 p-8 rounded-lg text-center text-gray-600 mb-6">
+                  No photos to preview
+                </div>
+              )}
 
-            <button onClick={prevStep} className="mr-2 bg-gray-400 text-white px-4 py-2 rounded">
-              Back
-            </button>
-            <button onClick={nextStep} className="bg-pink-600 text-white px-4 py-2 rounded">
-              Next
-            </button>
-          </>
-        )}
+              <div className="flex gap-3">
+                <button onClick={prevStep} className="flex-1 bg-gray-300 text-gray-800 py-3 rounded-lg font-semibold hover:bg-gray-400">
+                  Back
+                </button>
+                <button onClick={nextStep} className="flex-1 bg-pink-600 text-white py-3 rounded-lg font-semibold hover:bg-pink-700">
+                  Next
+                </button>
+              </div>
+            </>
+          )}
 
-        {/* STEP 8 */}
-        {step === 8 && (
-          <>
-            <h2 className="text-xl font-bold mb-4 text-green-600">
-              🎉 Congratulations!
-            </h2>
-            <p className="mb-4">Click below to complete registration and proceed to payment.</p>
+          {/* STEP 6 - Choose Package */}
+          {step === 6 && (
+            <>
+              <h2 className="text-2xl font-bold mb-2 text-purple-900">Choose Your Plan</h2>
+              <p className="text-gray-600 mb-6">Select a subscription package</p>
+              
+              <div className="space-y-4 mb-6">
+                <label className={`relative block border-2 rounded-lg p-4 cursor-pointer transition ${
+                  subscriptionDuration === 6 ? 'border-pink-600 bg-pink-50' : 'border-gray-200 hover:border-pink-300'
+                }`}>
+                  <input type="radio" value={6} checked={subscriptionDuration === 6}
+                    onChange={() => setSubscriptionDuration(6 as 6|12)} className="absolute left-4 top-4"
+                  />
+                  <div className="ml-8">
+                    <div className="font-semibold text-gray-900">6 Months Plan</div>
+                    <div className="text-2xl font-bold text-pink-600">₹20,000</div>
+                    <div className="text-sm text-gray-600">Save with annual billing</div>
+                  </div>
+                </label>
 
-            <button
-              onClick={handleRegister}
-              disabled={loading}
-              className="w-full bg-green-600 text-white py-2 rounded-lg"
-            >
-              {loading ? "Saving..." : "Register"}
-            </button>
-          </>
-        )}
+                <label className={`relative block border-2 rounded-lg p-4 cursor-pointer transition ${
+                  subscriptionDuration === 12 ? 'border-pink-600 bg-pink-50' : 'border-gray-200 hover:border-pink-300'
+                }`}>
+                  <input type="radio" value={12} checked={subscriptionDuration === 12}
+                    onChange={() => setSubscriptionDuration(12 as 6|12)} className="absolute left-4 top-4"
+                  />
+                  <div className="ml-8">
+                    <div className="font-semibold text-gray-900">12 Months Plan</div>
+                    <div className="text-2xl font-bold text-pink-600">₹35,000</div>
+                    <div className="text-sm text-gray-600">Best value</div>
+                  </div>
+                </label>
+              </div>
 
+              <input type="text" placeholder="Transaction ID (from payment)" value={transactionId}
+                onChange={(e) => setTransactionId(e.target.value)}
+                className="w-full p-3 border border-gray-300 rounded-lg mb-6"
+              />
+
+              <div className="flex gap-3">
+                <button onClick={prevStep} className="flex-1 bg-gray-300 text-gray-800 py-3 rounded-lg font-semibold hover:bg-gray-400">
+                  Back
+                </button>
+                <button onClick={nextStep} className="flex-1 bg-pink-600 text-white py-3 rounded-lg font-semibold hover:bg-pink-700">
+                  Next
+                </button>
+              </div>
+            </>
+          )}
+
+          {/* STEP 7 - Success */}
+          {step === 7 && (
+            <>
+              <div className="text-center">
+                <div className="text-6xl mb-4">🎉</div>
+                <h2 className="text-2xl font-bold text-green-600 mb-2">Registration Successful!</h2>
+                <p className="text-gray-600 mb-8">Your vendor profile has been created. Complete payment to activate your account.</p>
+                
+                <button onClick={handleRegister} disabled={loading}
+                  className="w-full bg-green-600 hover:bg-green-700 disabled:bg-gray-400 text-white py-3 rounded-lg font-semibold mb-3"
+                >
+                  {loading ? "Processing..." : "Confirm & Activate"}
+                </button>
+                <button onClick={prevStep} className="w-full bg-gray-300 hover:bg-gray-400 text-gray-800 py-3 rounded-lg font-semibold">
+                  Back
+                </button>
+              </div>
+            </>
+          )}
+
+        </div>
       </div>
     </div>
   );
