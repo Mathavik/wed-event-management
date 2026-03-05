@@ -12,7 +12,6 @@ interface Service {
 interface SelectedService {
   service_id: number;
   price: number;
-  price_type: string;
 }
 
 const RegisterProvider: React.FC = () => {
@@ -160,15 +159,14 @@ const RegisterProvider: React.FC = () => {
     if (existing) {
       setSelectedServices(selectedServices.filter(s => s.service_id !== serviceId));
     } else {
-      setSelectedServices([...selectedServices, { service_id: serviceId, price: 0, price_type: "" }]);
-    }
+setSelectedServices([...selectedServices, { service_id: serviceId, price: 0 }]);    }
   };
 
-  const updateServicePrice = (serviceId: number, price: number, priceType: string) => {
-    setSelectedServices(selectedServices.map(s => 
-      s.service_id === serviceId ? { ...s, price, price_type: priceType } : s
-    ));
-  };
+ const updateServicePrice = (serviceId: number, price: number) => {
+  setSelectedServices(selectedServices.map(s => 
+    s.service_id === serviceId ? { ...s, price } : s
+  ));
+};
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-pink-50 to-purple-50 py-10 px-4">
@@ -187,96 +185,141 @@ const RegisterProvider: React.FC = () => {
         <div className="bg-white rounded-2xl shadow-xl p-8">
 
           {/* STEP 1 - Services with Images */}
-          {step === 1 && (
-            <>
-              <h2 className="text-2xl font-bold mb-2 text-purple-900">Select Services</h2>
-              <p className="text-gray-600 mb-6">Choose at least one service you provide (select multiple)</p>
-              
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
-                {services.map((service) => {
-                  const isSelected = selectedServices.some(s => s.service_id === service.id);
-                  return (
-                    <div key={service.id} 
-                      className={`relative border-2 rounded-lg overflow-hidden cursor-pointer transition-all ${
-                        isSelected ? 'border-pink-600 shadow-lg' : 'border-gray-200 hover:border-pink-300'
-                      }`}
-                      onClick={() => toggleService(service.id)}
-                    >
-                      {/* Service Image */}
-                      {service.image_url ? (
-                        <img src={service.image_url} alt={service.title} className="w-full h-32 object-cover" />
-                      ) : (
-                        <div className="w-full h-32 bg-gray-200 flex items-center justify-center">
-                          <span className="text-gray-400">No image</span>
-                        </div>
-                      )}
-                      
-                      {/* Service Title & Checkbox */}
-                      <div className="p-4">
-                        <div className="flex items-center gap-3">
-                          <input
-                            type="checkbox"
-                            checked={isSelected}
-                            onChange={() => toggleService(service.id)}
-                            className="w-5 h-5 rounded text-pink-600 cursor-pointer"
-                          />
-                          <label className="font-semibold text-gray-800 cursor-pointer flex-1">{service.title}</label>
-                        </div>
-                      </div>
+         {step === 1 && (
+<>
+<h2 className="text-2xl font-bold mb-2 text-purple-900">
+Select Services
+</h2>
 
-                      {/* Price Input for Selected Services */}
-                      {isSelected && (
-                        <div className="bg-pink-50 p-3 border-t border-pink-200" onClick={(e) => e.stopPropagation()}>
-                          <input
-                            type="number"
-                            placeholder="Enter price (e.g., 50000)"
-                            min="0"
-                            step="100"
-                            value={selectedServices.find(s => s.service_id === service.id)?.price ?? ''}
-                            onChange={(e) => {
-                              const newPrice = e.target.value === '' ? 0 : Number(e.target.value);
-                              updateServicePrice(
-                                service.id, 
-                                newPrice, 
-                                selectedServices.find(s => s.service_id === service.id)?.price_type || ''
-                              );
-                            }}
-                            className="w-full p-2 border border-pink-300 rounded mb-2 text-sm focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-pink-500"
-                          />
-                          <select
-                            value={selectedServices.find(s => s.service_id === service.id)?.price_type ?? ''}
-                            onChange={(e) => updateServicePrice(
-                              service.id, 
-                              selectedServices.find(s => s.service_id === service.id)?.price ?? 0, 
-                              e.target.value
-                            )}
-                            className="w-full p-2 border border-pink-300 rounded text-sm focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-pink-500"
-                          >
-                            <option value="">Select Type</option>
-                            <option value="per_hour">Per Hour</option>
-                            <option value="per_day">Per Day</option>
-                            <option value="per_event">Per Event</option>
-                          </select>
-                        </div>
-                      )}
-                    </div>
-                  );
-                })}
-              </div>
+<p className="text-gray-600 mb-6">
+Choose at least one service you provide
+</p>
 
-              {selectedServices.length === 0 && (
-                <div className="bg-yellow-50 border border-yellow-200 text-yellow-800 p-3 rounded-lg mb-6">
-                  Please select at least one service to continue
-                </div>
-              )}
+<div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
 
-              <div className="flex gap-3">
-                <button onClick={nextStep} disabled={selectedServices.length === 0} className="flex-1 bg-pink-600 disabled:bg-gray-300 text-white py-3 rounded-lg font-semibold hover:bg-pink-700">
-                  Next
-                </button>
-              </div>
-            </>
-          )}
+{services.map((service) => {
+
+const isSelected = selectedServices.some(
+(s) => s.service_id === service.id
+);
+
+return (
+
+<div
+key={service.id}
+className={`relative border-2 rounded-lg overflow-hidden cursor-pointer transition-all ${
+isSelected
+? "border-pink-600 shadow-lg"
+: "border-gray-200 hover:border-pink-300"
+}`}
+onClick={() => toggleService(service.id)}
+>
+
+{/* Service Image */}
+
+{service.image_url ? (
+
+<img
+src={service.image_url}
+alt={service.title}
+className="w-full h-32 object-cover"
+/>
+
+) : (
+
+<div className="w-full h-32 bg-gray-200 flex items-center justify-center">
+<span className="text-gray-400">No image</span>
+</div>
+
+)}
+
+{/* Title */}
+
+<div className="p-4">
+<div className="flex items-center gap-3">
+
+<input
+type="checkbox"
+checked={isSelected}
+onChange={() => toggleService(service.id)}
+className="w-5 h-5"
+/>
+
+<label className="font-semibold text-gray-800">
+{service.title}
+</label>
+
+</div>
+</div>
+
+{/* PRICE INPUT */}
+
+{isSelected && (
+
+<div
+className="bg-pink-50 p-3 border-t border-pink-200"
+onClick={(e) => e.stopPropagation()}
+>
+
+<input
+type="number"
+placeholder="Enter price"
+min="0"
+step="100"
+value={
+selectedServices.find(
+(s) => s.service_id === service.id
+)?.price ?? ""
+}
+onChange={(e) => {
+
+const newPrice =
+e.target.value === ""
+? 0
+: Number(e.target.value);
+
+updateServicePrice(service.id, newPrice);
+
+}}
+className="w-full p-2 border border-pink-300 rounded"
+/>
+
+</div>
+
+)}
+
+</div>
+
+);
+
+})}
+
+</div>
+
+{selectedServices.length === 0 && (
+
+<div className="bg-yellow-50 border border-yellow-200 text-yellow-800 p-3 rounded-lg mb-6">
+Please select at least one service
+</div>
+
+)}
+
+<div className="flex gap-3">
+
+<button
+onClick={nextStep}
+disabled={selectedServices.length === 0}
+className="flex-1 bg-pink-600 disabled:bg-gray-300 text-white py-3 rounded-lg"
+>
+
+Next
+
+</button>
+
+</div>
+
+</>
+)}
 
           {/* STEP 2 - Location */}
           {step === 2 && (
