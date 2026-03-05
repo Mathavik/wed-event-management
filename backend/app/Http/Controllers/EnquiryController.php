@@ -1,7 +1,8 @@
 <?php
 
 namespace App\Http\Controllers;
-
+use Illuminate\Support\Facades\Mail;
+use App\Mail\EnquiryMail;
 use App\Models\Enquiry;
 use Illuminate\Http\Request;
 
@@ -53,6 +54,7 @@ class EnquiryController extends Controller
 
             // Load the provider relationship
             $enquiry = $enquiry->load('provider');
+            Mail::to($enquiry->provider->email)->send(new EnquiryMail($enquiry));
 
             return response()->json([
                 'message' => 'Enquiry submitted successfully!',

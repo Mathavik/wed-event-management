@@ -6,18 +6,18 @@ import VendorProfile from "../pages/VendorProfile";
 
 
 
+import VendorProtected from "./VendorProtected";
+
 export default function VendorRoutes() {
   return (
-    <Routes>
-
-      {/* PROTECTED VENDOR PANEL */}
-      <Route path="/*" element={<VendorLayout />}>
-        {/* <Route index element={<VendorDashboard />} /> */}
-        <Route path="dashboard" element={<VendorDashboard />} />
-        <Route path="bookings" element={<VendorBookings />} />
-        <Route path="profile" element={<VendorProfile />} />
-      </Route>
-
-    </Routes>
+    <VendorProtected>
+      <Routes>
+        <Route path="/*" element={<VendorLayout />}>
+          <Route path="dashboard" element={<VendorDashboard />} />
+          <Route path="bookings" element={<VendorBookings />} />
+          <Route path="profile" element={<VendorProfile />} />
+        </Route>
+      </Routes>
+    </VendorProtected>
   );
 }
