@@ -7,7 +7,7 @@ const navLinks = [
     { label: "Home", path: "/" },
     { label: "Services", path: "/headerservice" },
     { label: "Packages", path: "/packages" },
-    { label: "Login", path: "/login" },
+    // { label: "Login", path: "/login" },
 ];
 
 
@@ -19,15 +19,14 @@ const FloralSeparator = () => (
 
 
 const Logo = () => (
-    <div className="flex items-center">
+    <Link to="/" className="flex items-center">
         <img
             src={logo}
             alt="Kalyana Vaibhogam"
             className="h-40 w-auto object-contain"
         />
-    </div>
+    </Link>
 );
-
 export default function Header() {
     const [scrolled, setScrolled] = useState(false);
     const [menuOpen, setMenuOpen] = useState(false);
