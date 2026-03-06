@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axiosInstance from "../axiosInstance";
+import Swal from "sweetalert2";
 
 interface Service {
   id: number;
@@ -140,9 +141,14 @@ const RegisterProvider: React.FC = () => {
 
       await axiosInstance.post("/providers", payload);
 
-      alert("Registration Successful ✅");
-
-      navigate("/vendor/dashboard");
+     Swal.fire({
+  icon: "success",
+  title: "Registration Successful",
+  text: "Your account has been created successfully!",
+  confirmButtonColor: "#ec4899"
+}).then(() => {
+  navigate("/login");
+});
 
     } catch (error: any) {
       console.error(error);
@@ -482,18 +488,19 @@ Next
               />
 
               <div className="flex gap-3">
-                <button onClick={prevStep} className="flex-1 bg-gray-300 text-gray-800 py-3 rounded-lg font-semibold hover:bg-gray-400">
-                  Back
-                </button>
-                <button onClick={nextStep} className="flex-1 bg-pink-600 text-white py-3 rounded-lg font-semibold hover:bg-pink-700">
-                  Next
-                </button>
+               <button
+onClick={handleRegister}
+disabled={loading}
+className="flex-1 bg-green-600 hover:bg-green-700 disabled:bg-gray-400 text-white py-3 rounded-lg font-semibold"
+>
+{loading ? "Processing..." : "Register"}
+</button>
               </div>
             </>
           )}
 
           {/* STEP 7 - Success */}
-          {step === 7 && (
+          {/* {step === 7 && (
             <>
               <div className="text-center">
                 <div className="text-6xl mb-4">🎉</div>
@@ -510,7 +517,7 @@ Next
                 </button>
               </div>
             </>
-          )}
+          )} */}
 
         </div>
       </div>
