@@ -11,7 +11,8 @@ Route::post('/', [ServiceProvidersController::class, 'store']);
 
 // Get single provider
 Route::get('/providers/{id}', [ServiceProvidersController::class, 'show']);
-
+// Update provider
+Route::put('/providers/{id}', [ServiceProvidersController::class, 'update']);
 // Delete provider
 Route::delete('/providers/{id}', [ServiceProvidersController::class, 'destroy']);
 

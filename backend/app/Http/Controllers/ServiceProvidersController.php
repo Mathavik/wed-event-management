@@ -169,7 +169,76 @@ class ServiceProvidersController extends Controller
             'payment' => $payment
         ], 201);
     }
+public function update(Request $request, $id)
+{
+    $provider = ServiceProviders::findOrFail($id);
 
+    // Update basic fields
+    $provider->name = $request->name ?? $provider->name;
+    $provider->email = $request->email ?? $provider->email;
+    $provider->contact = $request->contact ?? $provider->contact;
+    $provider->description = $request->description ?? $provider->description;
+    $provider->experience = $request->experience ?? $provider->experience;
+    $provider->city = $request->city ?? $provider->city;
+    $provider->area = $request->area ?? $provider->area;
+
+    // Update password if sent
+    if ($request->filled('password')) {
+        $provider->password = Hash::make($request->password);
+    }
+
+    // Update profile image
+    if (!empty($request->image) && preg_match('/^data:image\/([a-zA-Z]+);base64,/', $request->image)) {
+        $matches = [];
+        preg_match('/^data:image\/(\w+);base64,/', $request->image, $matches);
+        $extension = $matches[1] ?? 'png';
+        $fileName = 'provider_' . time() . '.' . $extension;
+        $fileData = base64_decode(preg_replace('#^data:image/\w+;base64,#i', '', $request->image));
+        Storage::disk('public')->put('uploads/providers/' . $fileName, $fileData);
+        $provider->image = $fileName;
+    }
+
+    // Update service_pricing
+    if ($request->has('service_pricing')) {
+        $provider->service_pricing = $request->service_pricing;
+        if (count($request->service_pricing) > 0) {
+            $provider->service_id = $request->service_pricing[0]['service_id'];
+            $provider->price = $request->service_pricing[0]['price'];
+        }
+    }
+
+    // Update albums
+    if ($request->has('albums')) {
+        $albums = [];
+        foreach ($request->albums as $album) {
+            $photos = [];
+            if (!empty($album['photos'])) {
+                foreach ($album['photos'] as $photo) {
+                    if (preg_match('/^data:image\/(\w+);base64,/', $photo, $type)) {
+                        $extension = $type[1];
+                        $fileName = 'album_' . time() . rand(100,999) . '.' . $extension;
+                        $image = base64_decode(preg_replace('#^data:image/\w+;base64,#i', '', $photo));
+                        Storage::disk('public')->put('uploads/albums/' . $fileName, $image);
+                        $photos[] = asset('storage/uploads/albums/' . $fileName);
+                    }
+                }
+            }
+            $albums[] = [
+                'name' => $album['name'] ?? '',
+                'photos' => $photos
+            ];
+        }
+        $provider->albums = $albums;
+        $provider->portfolio_count = collect($albums)->sum(fn($a) => count($a['photos']));
+    }
+
+    $provider->save(); // Save to DB
+
+    return response()->json([
+        'message' => 'Provider updated successfully',
+        'data' => $provider
+    ]);
+}
     // 📌 Show single provider
     public function show($id)
     {

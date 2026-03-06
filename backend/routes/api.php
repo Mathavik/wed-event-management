@@ -34,6 +34,7 @@ Route::get('/enquiries/{id}', [EnquiryController::class, 'show']);
 Route::get('/vendor/enquiries/{providerId}', [EnquiryController::class, 'vendorEnquiries']);
 Route::get('/vendor/bookings/{provider_id}', [EnquiryController::class, 'vendorBookings']);
 Route::delete('/enquiries/{id}', [EnquiryController::class, 'destroy']);
+Route::get('/admin/dashboard-stats', [EnquiryController::class, 'adminDashboardStats']);
 // Event Routes
 Route::get('/events', [EventController::class, 'index']);
 Route::get('/events/{id}', [EventController::class, 'show']);

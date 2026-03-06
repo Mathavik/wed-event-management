@@ -138,6 +138,17 @@ public function vendorBookings(Request $request)
         "data" => $enquiries
     ]);
 }
-
+public function adminDashboardStats() {
+    return response()->json([
+        'status' => true,
+        'data' => [
+            'totalVendors' => \App\Models\ServiceProviders::count(),
+            'totalBookings' => Enquiry::count(),
+            'totalUsers' => \App\Models\User::count(), // Added Total Users
+            'pendingBookings' => Enquiry::where('status', 'pending')->count(),
+            'totalRevenue' => \App\Models\Payment::where('status', 'completed')->sum('amount')
+        ]
+    ]);
+}
 
 }
