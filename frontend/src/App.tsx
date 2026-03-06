@@ -15,10 +15,11 @@ import Payment from "./pages/Payment";
 
 import VendorRoutes from "./vendor/layout/VendorRoutes";
 import HeaderService from "./pages/services/headerservice";
-
+import ScrollToTop from "../src/components/ScrollToTop";
 function App() {
   return (
     <Router>
+      <ScrollToTop />
       <Routes>
         {/* ✅ User Routes: Header & Footer inga mattum dhaan varum */}
         <Route path="/" element={<MainLayout />}>
