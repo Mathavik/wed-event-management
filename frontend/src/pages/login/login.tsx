@@ -23,9 +23,9 @@ const handleSubmit = async (e: any) => {
     alert("Login Successful");
 
     // Clear old data first
-    localStorage.removeItem("user");
-    localStorage.removeItem("admin");
-    localStorage.removeItem("vendor");
+    // localStorage.removeItem("user");
+    // localStorage.removeItem("admin");
+    // localStorage.removeItem("vendor");
 
     // Save based on role
     if (logged.role === "admin") {
