@@ -1,7 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import axiosInstance from "../../axiosInstance";
-
+interface Album {
+  name: string;
+  photos: string[];
+}
 interface Provider {
   id: number;
   service_id: number;
@@ -16,6 +19,9 @@ interface Provider {
   is_featured?: boolean;
   price?: number;
   price_type?: string;
+  area: string;
+  city: string;
+  albums?: Album[];
 }
 
 interface EnquiryForm {
@@ -40,7 +46,7 @@ const ServiceProvider = () => {
   const [submitting, setSubmitting] = useState(false);
   const [showThankYou, setShowThankYou] = useState(false);
   const [submittedProvider, setSubmittedProvider] = useState<Provider | null>(null);
-const [showAuthPopup, setShowAuthPopup] = useState(false);
+  const [showAuthPopup, setShowAuthPopup] = useState(false);
   const [formData, setFormData] = useState<EnquiryForm>({
     provider_id: 0,
     wedding_city: "",
@@ -208,9 +214,11 @@ const [showAuthPopup, setShowAuthPopup] = useState(false);
 
               {/* Provider Info */}
               <div className="p-6">
-                <h3 className="text-xl font-semibold text-gray-800 mb-2">
-                  {provider.name}
-                </h3>
+                {provider.albums && provider.albums.length > 0 && (
+                  <p>
+                    {provider.albums[0].name}
+                  </p>
+                )}
 
                 {provider.description && (
                   <p className="text-gray-600 text-sm mb-4 line-clamp-3">
@@ -220,16 +228,12 @@ const [showAuthPopup, setShowAuthPopup] = useState(false);
 
                 {/* Contact Info */}
                 <div className="space-y-2 mb-4 text-sm text-gray-600">
-                  {provider.contact && (
+
+                  {(provider.area || provider.city) && (
                     <p>
-                      <span className="font-semibold">📞 </span>
-                      {provider.contact}
-                    </p>
-                  )}
-                  {provider.email && (
-                    <p>
-                      <span className="font-semibold">✉️ </span>
-                      {provider.email}
+                      {/* <span className="font-semibold">📍 </span> */}
+                      {provider.area}{provider.area && provider.city && ", "}
+                      {provider.city}
                     </p>
                   )}
                 </div>
@@ -255,7 +259,7 @@ const [showAuthPopup, setShowAuthPopup] = useState(false);
 
                 {/* Send Enquiry Button */}
                 <button
-                
+
                   onClick={() => handleEnquiryClick(provider)}
                   className="w-full mt-4 bg-red-500 hover:bg-red-600 text-white font-semibold py-2 px-4 rounded-lg transition duration-200"
                 >
@@ -429,8 +433,8 @@ const [showAuthPopup, setShowAuthPopup] = useState(false);
                         type="button"
                         onClick={() => handleServiceToggle(service)}
                         className={`px-4 py-2 rounded-full font-medium transition ${formData.interested_services.includes(service)
-                            ? "bg-pink-500 text-white"
-                            : "bg-gray-200 text-gray-700 hover:bg-gray-300"
+                          ? "bg-pink-500 text-white"
+                          : "bg-gray-200 text-gray-700 hover:bg-gray-300"
                           }`}
                       >
                         {service}
