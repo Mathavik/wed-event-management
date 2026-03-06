@@ -17,3 +17,4 @@ Route::put('/providers/{id}', [ServiceProvidersController::class, 'update']);
 Route::delete('/providers/{id}', [ServiceProvidersController::class, 'destroy']);
 
 Route::get('/', [ServiceProvidersController::class, 'allProviders']);
+Route::get('/all-payments', [ServiceProvidersController::class, 'allPayments']);
