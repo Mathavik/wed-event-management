@@ -17,12 +17,24 @@ export default function Register() {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = async (e: any) => {
-    e.preventDefault();
+ const handleSubmit = async (e: any) => {
+  e.preventDefault();
+
+  try {
     await axios.post("http://localhost:8000/api/register", form);
     alert("Registered Successfully");
     navigate("/login");
-  };
+
+  } catch (error: any) {
+
+    if (error.response?.data?.errors?.email) {
+      alert(error.response.data.errors.email[0]);
+    } else {
+      alert("Something went wrong");
+    }
+
+  }
+};
 
   return (
     <div className="flex justify-center items-center h-screen bg-pink-100">
