@@ -30,6 +30,13 @@ const RegisterProvider: React.FC = () => {
   const [profileImage, setProfileImage] = useState<File | null>(null);
   const [profilePreview, setProfilePreview] = useState<string>("");
 
+useEffect(() => {
+  window.scrollTo({
+    top: 0,
+    behavior: "smooth"
+  });
+}, [step]);
+
   const navigate = useNavigate();
 
   const [formData, setFormData] = useState({

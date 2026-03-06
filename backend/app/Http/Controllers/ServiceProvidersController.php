@@ -245,6 +245,16 @@ public function update(Request $request, $id)
         $provider = ServiceProviders::findOrFail($id);
         return response()->json($provider);
     }
+    public function allPayments()
+{
+    // Payment details koodave provider-oda name-um vara 'with' use pannuroam
+    $payments = Payment::with('provider:id,name')->get();
+
+    return response()->json([
+        'status' => true,
+        'data' => $payments
+    ]);
+}
 
     // 📌 Delete provider
     public function destroy($id)
