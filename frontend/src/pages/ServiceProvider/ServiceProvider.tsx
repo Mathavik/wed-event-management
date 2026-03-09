@@ -422,7 +422,7 @@ const ServiceProvider = () => {
                 </div>
 
                 {/* Interested Services */}
-                <div>
+                {/* <div>
                   <label className="block text-sm font-medium text-gray-700 mb-3">
                     Interested in Other Services?
                   </label>
@@ -441,7 +441,7 @@ const ServiceProvider = () => {
                       </button>
                     ))}
                   </div>
-                </div>
+                </div> */}
               </div>
 
               {/* Submit Button */}
