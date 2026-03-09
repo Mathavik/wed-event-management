@@ -1,16 +1,18 @@
 <?php
 
 namespace App\Http\Controllers;
-use Illuminate\Support\Facades\Mail;
-use App\Mail\EnquiryMail;
-use App\Models\Enquiry;
+
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
+use App\Models\Enquiry;
+use App\Mail\EnquiryMail;
+use App\Mail\PaymentRequestMail;
 
 class EnquiryController extends Controller
 {
-    /**
-     * Get all enquiries (for admin)
-     */
+
+    // ================= ADMIN - GET ALL ENQUIRIES =================
+
     public function index()
     {
         $enquiries = Enquiry::with('provider')
@@ -23,9 +25,9 @@ class EnquiryController extends Controller
         ]);
     }
 
-    /**
-     * Store a new enquiry
-     */
+
+    // ================= CREATE ENQUIRY =================
+
     public function store(Request $request)
     {
         $validated = $request->validate([
@@ -40,6 +42,7 @@ class EnquiryController extends Controller
         ]);
 
         try {
+
             $enquiry = Enquiry::create([
                 'provider_id' => $validated['provider_id'],
                 'customer_name' => $validated['customer_name'],
@@ -52,15 +55,19 @@ class EnquiryController extends Controller
                 'status' => 'pending',
             ]);
 
-            // Load the provider relationship
-            $enquiry = $enquiry->load('provider');
-            Mail::to($enquiry->provider->email)->send(new EnquiryMail($enquiry));
+            $enquiry->load('provider');
+
+            // mail to vendor
+            Mail::to($enquiry->provider->email)
+                ->send(new EnquiryMail($enquiry));
 
             return response()->json([
-                'message' => 'Enquiry submitted successfully!',
+                'message' => 'Enquiry submitted successfully',
                 'data' => $enquiry
             ], 201);
+
         } catch (\Exception $e) {
+
             return response()->json([
                 'message' => 'Failed to submit enquiry',
                 'error' => $e->getMessage()
@@ -68,9 +75,9 @@ class EnquiryController extends Controller
         }
     }
 
-    /**
-     * Get a specific enquiry
-     */
+
+    // ================= SHOW SINGLE ENQUIRY =================
+
     public function show($id)
     {
         $enquiry = Enquiry::with('provider')->findOrFail($id);
@@ -81,15 +88,49 @@ class EnquiryController extends Controller
         ]);
     }
 
-    /**
-     * Update enquiry status (for admin/vendor)
-     */
+
+    // ================= ACCEPT ENQUIRY =================
+
+    public function accept($id)
+    {
+        $enquiry = Enquiry::findOrFail($id);
+
+        $enquiry->status = 'accepted';
+        $enquiry->save();
+
+        // send payment request mail
+        Mail::to($enquiry->customer_email)
+            ->send(new PaymentRequestMail($enquiry));
+
+        return response()->json([
+            "message" => "Enquiry accepted successfully"
+        ]);
+    }
+
+
+    // ================= REJECT ENQUIRY =================
+
+    public function reject($id)
+    {
+        $enquiry = Enquiry::findOrFail($id);
+
+        $enquiry->status = 'rejected';
+        $enquiry->save();
+
+        return response()->json([
+            "message" => "Enquiry rejected successfully"
+        ]);
+    }
+
+
+    // ================= UPDATE STATUS =================
+
     public function update(Request $request, $id)
     {
         $enquiry = Enquiry::findOrFail($id);
 
         $validated = $request->validate([
-            'status' => 'sometimes|in:pending,contacted,completed,cancelled',
+            'status' => 'sometimes|in:pending,accepted,rejected'
         ]);
 
         $enquiry->update($validated);
@@ -100,9 +141,9 @@ class EnquiryController extends Controller
         ]);
     }
 
-    /**
-     * Delete an enquiry
-     */
+
+    // ================= DELETE ENQUIRY =================
+
     public function destroy($id)
     {
         $enquiry = Enquiry::findOrFail($id);
@@ -113,42 +154,52 @@ class EnquiryController extends Controller
         ]);
     }
 
+
+    // ================= VENDOR ENQUIRIES =================
+
     public function vendorEnquiries($providerId)
-{
-    $enquiries = Enquiry::where('provider_id', $providerId)
-        ->orderBy('created_at', 'desc')
-        ->get();
+    {
+        $enquiries = Enquiry::where('provider_id', $providerId)
+            ->orderBy('created_at', 'desc')
+            ->get();
 
-    return response()->json([
-        'message' => 'Vendor enquiries retrieved successfully',
-        'data' => $enquiries
-    ]);
-}
+        return response()->json([
+            'message' => 'Vendor enquiries retrieved successfully',
+            'data' => $enquiries
+        ]);
+    }
 
-public function vendorBookings(Request $request)
-{
-    $providerId = $request->provider_id;
 
-    $enquiries = Enquiry::where('provider_id', $providerId)
-        ->orderBy('created_at', 'desc')
-        ->get();
+    // ================= VENDOR BOOKINGS =================
 
-    return response()->json([
-        "message" => "Vendor bookings fetched",
-        "data" => $enquiries
-    ]);
-}
-public function adminDashboardStats() {
-    return response()->json([
-        'status' => true,
-        'data' => [
-            'totalVendors' => \App\Models\ServiceProviders::count(),
-            'totalBookings' => Enquiry::count(),
-            'totalUsers' => \App\Models\User::count(), // Added Total Users
-            'pendingBookings' => Enquiry::where('status', 'pending')->count(),
-            'totalRevenue' => \App\Models\Payment::where('status', 'completed')->sum('amount')
-        ]
-    ]);
-}
+    public function vendorBookings($provider_id)
+    {
+        $enquiries = Enquiry::where('provider_id', $provider_id)
+            ->where('status', 'accepted')
+            ->orderBy('created_at', 'desc')
+            ->get();
+
+        return response()->json([
+            "message" => "Vendor bookings fetched",
+            "data" => $enquiries
+        ]);
+    }
+
+
+    // ================= ADMIN DASHBOARD =================
+
+    public function adminDashboardStats()
+    {
+        return response()->json([
+            'status' => true,
+            'data' => [
+                'totalVendors' => \App\Models\ServiceProviders::count(),
+                'totalBookings' => Enquiry::count(),
+                'totalUsers' => \App\Models\User::count(),
+                'pendingBookings' => Enquiry::where('status', 'pending')->count(),
+                'totalRevenue' => \App\Models\Payment::where('status', 'completed')->sum('amount')
+            ]
+        ]);
+    }
 
 }
