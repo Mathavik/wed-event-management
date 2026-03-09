@@ -89,13 +89,34 @@ class ServiceProvidersController extends Controller
         // 3. Handle Service Pricing (JSON Storage)
         if ($request->has('service_pricing')) {
             // Laravel Model Cast will convert this array to JSON automatically
-            $providerData['service_pricing'] = $request->service_pricing;
+           if ($request->has('service_pricing')) {
 
-            // Backward compatibility for single service_id and price
-            if (count($request->service_pricing) > 0) {
-                $providerData['service_id'] = $request->service_pricing[0]['service_id'];
-                $providerData['price'] = $request->service_pricing[0]['price'];
-            }
+    $pricing = [];
+
+    foreach ($request->service_pricing as $service) {
+
+        $originalPrice = $service['price'];
+
+        // 20% increase
+        $finalPrice = $originalPrice + ($originalPrice * 1.20);
+
+        // round pannalaam
+        $finalPrice = round($finalPrice);
+
+        $pricing[] = [
+            'service_id' => $service['service_id'],
+            'price' => $finalPrice
+        ];
+    }
+
+    $providerData['service_pricing'] = $pricing;
+
+    // first service price save
+    if (count($pricing) > 0) {
+        $providerData['service_id'] = $pricing[0]['service_id'];
+        $providerData['price'] = $pricing[0]['price'];
+    }
+}
         } elseif ($request->filled('service_id')) {
             $providerData['service_id'] = $request->service_id;
         }
