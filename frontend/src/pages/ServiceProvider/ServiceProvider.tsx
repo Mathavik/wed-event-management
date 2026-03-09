@@ -76,29 +76,13 @@ const ServiceProvider = () => {
   }, [id]);
 
   const handleEnquiryClick = (provider: Provider) => {
-    const token = localStorage.getItem("token");
-    const user = localStorage.getItem("user"); // if you store user info
-
-    // If not registered (no user data at all)
-    if (!user) {
-      navigate("/register");
-      return;
-    }
-
-    // If registered but not logged in (no token)
-    if (!token) {
-      navigate("/login");
-      return;
-    }
-
-    // If logged in → show form
-    setSelectedProvider(provider);
-    setFormData({
-      ...formData,
-      provider_id: provider.id,
-    });
-    setShowEnquiryForm(true);
-  };
+  setSelectedProvider(provider);
+  setFormData({
+    ...formData,
+    provider_id: provider.id,
+  });
+  setShowEnquiryForm(true);
+};
 
   const handleCloseForm = () => {
     setShowEnquiryForm(false);
@@ -422,7 +406,7 @@ const ServiceProvider = () => {
                 </div>
 
                 {/* Interested Services */}
-                <div>
+                {/* <div>
                   <label className="block text-sm font-medium text-gray-700 mb-3">
                     Interested in Other Services?
                   </label>
@@ -441,7 +425,7 @@ const ServiceProvider = () => {
                       </button>
                     ))}
                   </div>
-                </div>
+                </div> */}
               </div>
 
               {/* Submit Button */}

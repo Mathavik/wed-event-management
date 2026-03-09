@@ -2,7 +2,7 @@ import { Routes, Route } from "react-router-dom";
 import AdminLayout from "./AdminLayout";
 import AdminProtected from "./AdminProtected";
 import Dashboard from "./pages/Dashboard";
-import Bookings from "./pages/Bookings";
+// import Bookings from "./pages/Bookings";
 import Payments from "./pages/Payments";
 import Events from "./pages/Events";
 import Services from "./pages/Services";
@@ -25,7 +25,7 @@ export default function AdminRoutes() {
         }
       >
         <Route index element={<Dashboard />} />
-        <Route path="bookings" element={<Bookings />} />
+        {/* <Route path="bookings" element={<Bookings />} /> */}
         <Route path="payments" element={<Payments />} />
         <Route path="events" element={<Events />} />
         <Route path="services" element={<Services />} />

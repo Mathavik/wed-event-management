@@ -10,9 +10,7 @@ export default function AdminSidebar() {
           Dashboard
         </Link>
 
-        <Link to="/admin/bookings" className="block p-2 rounded hover:bg-pink-700">
-          Bookings
-        </Link>
+        
 
         <Link to="/admin/payments" className="block p-2 rounded hover:bg-pink-700">
           Payments
