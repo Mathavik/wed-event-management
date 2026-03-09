@@ -3,8 +3,9 @@ import DreamWedding from "../home/DreamWedding";
 import FeaturedPackages from "../home/FeaturedPackages";
 import ServicesOverview from "../home/ServicesOverview";
 import TestimonialsSection from "../home/TestimonialsSection";
-import GalleryPreview from "../home/GalleryPreview";
 import ContactCTA from "../home/ContactCTA";
+import KalyanaVaibhogamPage from "./Gallery";
+import GalleryPage from "./Gallery";
 
 const Home = () => {
   return (
@@ -13,8 +14,8 @@ const Home = () => {
       <DreamWedding />
       {/* <FeaturedPackages /> */}
       <ServicesOverview />
+      <GalleryPage/>
       <TestimonialsSection />
-      <GalleryPreview />
       <ContactCTA />
     </>
   );

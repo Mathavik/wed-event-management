@@ -35,33 +35,51 @@ const WeddingServices = () => {
               Premier Event Specialists
             </span> */}
           </div>
-          
-          <h2 className="text-4xl md:text-5xl font-black text-slate-900 mb-6 leading-tight">
-            Turning Your <span className="text-pink-600">Vision</span> <br/> Into Iconic Moments
-          </h2>
-          
-          <p className="text-slate-500 text-base mb-8 leading-relaxed">
-            At <strong>Kalyana Vaibhogam</strong>, we blend creative strategy with technical precision to deliver unmatched experiences for every unique story.
-          </p>
+{/* Section Title */}
+<p
+  className="text-center italic text-2xl mb-2"
+  style={{
+    fontFamily: "Georgia, serif",
+    color: "#b08a5b"
+  }}
+>
+  ~ About Us ~
+</p>
 
-          {/* Event List */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-10">
-            {eventFeatures.map((item, index) => (
-              <div key={index} className="border-l-2 border-pink-100 pl-4 hover:border-pink-500 transition-colors">
-                <h4 className="font-bold text-slate-800 text-sm uppercase mb-1">{item.title}</h4>
-                <p className="text-slate-500 text-xs leading-snug">
-                  {item.desc}
-                </p>
-              </div>
-            ))}
-          </div>
+{/* Main Heading */}
+<h2
+  className="text-center text-5xl md:text-6xl font-bold mb-4"
+  style={{
+    fontFamily: "Georgia, serif",
+    color: "#0f2235"
+  }}
+>
+  Crafting Beautiful Celebrations
+</h2>
+
+{/* Decorative Line */}
+<div className="flex justify-center mb-8">
+  <div className="w-24 h-[2px]" style={{ background: "#b08a5b" }}></div>
+</div>
+<p className="text-gray-500 text-base leading-relaxed max-w-xl mb-4">
+  At <strong>Kalyana Vaibhogam</strong>, we specialize in creating
+  unforgettable celebrations filled with elegance, beauty, and joy.
+  Our dedicated team carefully plans every detail to ensure your
+  special moments become lifelong memories.
+</p>
+
+<p className="text-gray-500 text-base leading-relaxed max-w-xl">
+  From weddings and birthdays to traditional ceremonies and
+  corporate events, we deliver exceptional experiences with
+  creativity, passion, and perfect coordination.
+</p>
 
           {/* Quote Block */}
-          <div className="p-6 bg-slate-50 rounded-xl border-l-4 border-pink-600 mb-8">
+          {/* <div className="p-6 bg-slate-50 rounded-xl border-l-4 border-pink-600 mb-8">
             <p className="text-slate-700 font-medium italic text-base">
               "We engineer emotions and capture memories that last a lifetime."
             </p>
-          </div>
+          </div> */}
           
           {/* <div className="flex gap-4">
             <button className="px-8 py-3 bg-slate-900 text-white font-bold rounded-full hover:bg-pink-600 transition-all text-xs tracking-widest uppercase">
