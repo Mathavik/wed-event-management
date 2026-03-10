@@ -71,7 +71,7 @@ const HeroSection: React.FC = () => {
       <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-transparent to-black/80" />
 
       {/* Content */}
-      <div className="relative z-10 text-center px-4 max-w-5xl">
+      {/* <div className="relative z-10 text-center px-4 max-w-5xl">
         <h1 className="text-5xl md:text-7xl font-extrabold leading-tight drop-shadow-2xl transition-all duration-500">
           {activeContent.title.split(" ").map((word, i) => (
             <span 
@@ -82,7 +82,7 @@ const HeroSection: React.FC = () => {
             </span>
           ))}
         </h1>
-      </div>
+      </div> */}
 
       {/* Slider Progress Indicators (Dots) */}
       <div className="absolute bottom-10 flex gap-3">
