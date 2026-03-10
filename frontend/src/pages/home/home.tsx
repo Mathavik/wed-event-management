@@ -13,10 +13,12 @@ const Home = () => {
       <HeroSection />
       <DreamWedding />
       {/* <FeaturedPackages /> */}
+
       <ServicesOverview />
-      <GalleryPage/>
-      <TestimonialsSection />
       <ContactCTA />
+    <GalleryPage/>
+
+      <TestimonialsSection />
     </>
   );
 };
