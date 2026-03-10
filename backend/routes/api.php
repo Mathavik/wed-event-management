@@ -6,6 +6,7 @@ use App\Http\Controllers\EventController;
 use App\Http\Controllers\AdminUserController;
 use App\Http\Controllers\AdminEventController;
 use App\Http\Controllers\EnquiryController;
+use App\Http\Controllers\PaymentController;
 
 /*
 |--------------------------------------------------------------------------
@@ -78,4 +79,14 @@ Route::prefix('admin')->group(function () {
     Route::get('/enquiries/accept/{id}', [EnquiryController::class, 'accept']);
     Route::get('/enquiries/reject/{id}', [EnquiryController::class, 'reject']);
 
+    // ADMIN VIEW PAYMENTS
+    Route::get('/user-payments', [PaymentController::class, 'index']);
+    Route::get('/user-payments/{id}', [PaymentController::class, 'show']);
 });
+
+
+// ================= PAYMENTS (USER SIDE) =================
+
+Route::post('/user-payment', [PaymentController::class, 'store']);
+Route::put('/user-payments/{id}', [PaymentController::class, 'update']);
+Route::delete('/user-payments/{id}', [PaymentController::class, 'destroy']);
