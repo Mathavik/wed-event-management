@@ -16,6 +16,7 @@ import Payment from "./pages/Payment";
 import VendorRoutes from "./vendor/layout/VendorRoutes";
 import HeaderService from "./pages/services/headerservice";
 import ScrollToTop from "../src/components/ScrollToTop";
+import ContactPage from "./pages/contact/Contact";
 import UserPayment from "./pages/userpayment/UserPayment";
 function App() {
   return (
@@ -35,6 +36,7 @@ function App() {
 
           <Route path="registerprovider" element={<RegisterProvider />} />
           <Route path="payment" element={<Payment />} />
+          <Route path="Contact" element={<ContactPage/>} />
 
          <Route path="/service-provider/:id" element={<ServiceProvider />} />
         </Route>
