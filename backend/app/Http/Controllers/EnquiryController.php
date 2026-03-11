@@ -30,16 +30,28 @@ class EnquiryController extends Controller
 
     public function store(Request $request)
     {
-        $validated = $request->validate([
-            'provider_id' => 'required|exists:service_providerss,id',
-            'customer_name' => 'required|string|max:255',
-            'customer_email' => 'required|email|max:255',
-            'customer_phone' => 'required|string|max:20',
-            'wedding_city' => 'required|string|max:255',
-            'wedding_date' => 'required|date',
-            'budget' => 'nullable|string',
-            'interested_services' => 'nullable|array',
-        ]);
+       $validated = $request->validate([
+    'provider_id' => 'required|exists:service_providerss,id',
+    'customer_name' => 'required|string|max:255',
+    'customer_email' => 'required|email|max:255',
+    'customer_phone' => 'required|string|max:20',
+    'wedding_city' => 'required|string|max:255',
+    'wedding_date' => 'required|date',
+    'budget' => 'nullable|string',
+    'interested_services' => 'nullable|array',
+]);
+
+// CHECK DATE AVAILABILITY
+$existingBooking = Enquiry::where('provider_id', $validated['provider_id'])
+    ->where('wedding_date', $validated['wedding_date'])
+    ->whereIn('status', ['pending','accepted'])
+    ->exists();
+
+if ($existingBooking) {
+    return response()->json([
+        'message' => 'This vendor is not available on this date'
+    ], 409);
+}
 
         try {
 
@@ -100,10 +112,10 @@ class EnquiryController extends Controller
 
         // send payment request mail
         Mail::to($enquiry->customer_email)
-            ->send(new PaymentRequestMail($enquiry));
+        ->send(new PaymentRequestMail($enquiry));
 
-        return response()->json([
-            "message" => "Enquiry accepted successfully"
+    return response()->json([
+        "message" => "Enquiry accepted and mail sent with payment link"
         ]);
     }
 

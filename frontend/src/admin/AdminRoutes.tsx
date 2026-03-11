@@ -8,6 +8,7 @@ import Events from "./pages/Events";
 import Services from "./pages/Services";
 import Users from "./pages/Users";
 import AdminLogin from "./Adminlogin/AdminLogin";
+import AdminUserPayments from "./pages/AdminUserPayments";
 
 export default function AdminRoutes() {
   return (
@@ -30,6 +31,7 @@ export default function AdminRoutes() {
         <Route path="events" element={<Events />} />
         <Route path="services" element={<Services />} />
         <Route path="users" element={<Users />} />
+        <Route path="user-payments" element={<AdminUserPayments />} />
       </Route>
     </Routes>
   );

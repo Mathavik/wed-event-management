@@ -76,13 +76,13 @@ const ServiceProvider = () => {
   }, [id]);
 
   const handleEnquiryClick = (provider: Provider) => {
-  setSelectedProvider(provider);
-  setFormData({
-    ...formData,
-    provider_id: provider.id,
-  });
-  setShowEnquiryForm(true);
-};
+    setSelectedProvider(provider);
+    setFormData({
+      ...formData,
+      provider_id: provider.id,
+    });
+    setShowEnquiryForm(true);
+  };
 
   const handleCloseForm = () => {
     setShowEnquiryForm(false);
@@ -114,33 +114,38 @@ const ServiceProvider = () => {
     }));
   };
 
-  const handleSubmitEnquiry = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setSubmitting(true);
+ const handleSubmitEnquiry = async (e: React.FormEvent) => {
+  e.preventDefault();
+  setSubmitting(true);
 
-    try {
-      const response = await axiosInstance.post("/enquiries", formData);
-      console.log("Enquiry submitted:", response.data);
-      setShowEnquiryForm(false);
+  try {
+    const response = await axiosInstance.post("/enquiries", formData);
+    console.log("Enquiry submitted:", response.data);
 
-      // Use provider data from the response if available
-      if (response.data.data && response.data.data.provider) {
-        setSubmittedProvider({
-          ...selectedProvider,
-          ...response.data.data.provider
-        } as Provider);
-      } else {
-        setSubmittedProvider(selectedProvider);
-      }
+    setSubmitting(false); // ⭐ ADD THIS
 
-      setShowThankYou(true);
-    } catch (err) {
-      console.error("Error submitting enquiry:", err);
-      alert("Failed to submit enquiry. Please try again.");
-      setSubmitting(false);
+    setShowEnquiryForm(false);
+
+    if (response.data.data && response.data.data.provider) {
+      setSubmittedProvider({
+        ...selectedProvider,
+        ...response.data.data.provider
+      } as Provider);
+    } else {
+      setSubmittedProvider(selectedProvider);
     }
-  };
 
+    setShowThankYou(true);
+
+  } catch (err: any) {
+    if (err.response?.status === 409) {
+      alert("This vendor is not available on this date");
+    } else {
+      alert("Failed to submit enquiry. Please try again.");
+    }
+    setSubmitting(false);
+  }
+};
   if (loading) {
     return (
       <div className="flex justify-center items-center py-20">

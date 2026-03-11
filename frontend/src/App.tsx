@@ -17,6 +17,7 @@ import VendorRoutes from "./vendor/layout/VendorRoutes";
 import HeaderService from "./pages/services/headerservice";
 import ScrollToTop from "../src/components/ScrollToTop";
 import ContactPage from "./pages/contact/Contact";
+import UserPayment from "./pages/userpayment/UserPayment";
 function App() {
   return (
     <Router>
@@ -44,6 +45,7 @@ function App() {
         <Route path="/admin/*" element={<AdminRoutes />} />
         {/* ✅ Vendor Routes (MainLayout-ku veliya) */}
         <Route path="/vendor/*" element={<VendorRoutes />} />
+        <Route path="/payment/:id" element={<UserPayment />} />
 
 
       </Routes>

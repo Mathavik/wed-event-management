@@ -10,10 +10,10 @@ export default function AdminSidebar() {
           Dashboard
         </Link>
 
-        
+
 
         <Link to="/admin/payments" className="block p-2 rounded hover:bg-pink-700">
-          Payments
+          Vendor Payments
         </Link>
 
         <Link to="/admin/events" className="block p-2 rounded hover:bg-pink-700">
@@ -27,9 +27,11 @@ export default function AdminSidebar() {
         <Link to="/admin/users" className="block p-2 rounded hover:bg-pink-700">
           Users
         </Link>
-
-        <button 
-        onClick={() => {
+        <Link to="/admin/user-payments" className="block p-2 rounded hover:bg-pink-700">
+          User Payments
+        </Link>
+        <button
+          onClick={() => {
             localStorage.removeItem("admin");
             window.location.href = "/";
           }}
