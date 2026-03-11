@@ -4,7 +4,7 @@ import React, { useState, useEffect } from "react";
 // உன்னுடைய ஃபோல்டரில் உள்ள இமேஜ் பெயர்களுக்கு ஏத்த மாதிரி இதை மாற்றிக்கொள்
 import wedding1 from "../../assets/tel1.jpg";
 import wedding2 from "../../assets/tel4.jpg";
-import wedding3 from "../../assets/tel6.jpg";
+import wedding3 from "../../assets/silder1.png";
 
 import birthday1 from "../../assets/bir1.jpg";
 import birthday2 from "../../assets/bir2.jpg";

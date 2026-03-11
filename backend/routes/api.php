@@ -6,6 +6,7 @@ use App\Http\Controllers\EventController;
 use App\Http\Controllers\AdminUserController;
 use App\Http\Controllers\AdminEventController;
 use App\Http\Controllers\EnquiryController;
+use App\Http\Controllers\ContactController;
 
 /*
 |--------------------------------------------------------------------------
@@ -58,6 +59,7 @@ Route::post('/events', [EventController::class, 'store']);
 Route::put('/events/{id}', [EventController::class, 'update']);
 Route::delete('/events/{id}', [EventController::class, 'destroy']);
 
+Route::post('/contact', [ContactController::class, 'store']);
 
 // ================= ADMIN =================
 
@@ -77,5 +79,7 @@ Route::prefix('admin')->group(function () {
     // ENQUIRY ACCEPT / REJECT
     Route::get('/enquiries/accept/{id}', [EnquiryController::class, 'accept']);
     Route::get('/enquiries/reject/{id}', [EnquiryController::class, 'reject']);
+
+
 
 });

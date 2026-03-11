@@ -7,7 +7,7 @@ const navLinks = [
     { label: "Home", path: "/" },
     { label: "Services", path: "/headerservice" },
     { label: "Packages", path: "/packages" },
-    // { label: "Login", path: "/login" },
+    { label: "contact", path: "/contact" },
 ];
 
 
