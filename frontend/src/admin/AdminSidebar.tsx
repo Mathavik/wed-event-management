@@ -23,13 +23,16 @@ export default function AdminSidebar() {
         <Link to="/admin/services" className="block p-2 rounded hover:bg-pink-700">
           Services
         </Link>
-
+ <Link to="/admin/user-bookings" className="block p-2 rounded hover:bg-pink-700">
+          User Bookings
+        </Link>
         <Link to="/admin/users" className="block p-2 rounded hover:bg-pink-700">
           Users
         </Link>
         <Link to="/admin/user-payments" className="block p-2 rounded hover:bg-pink-700">
           User Payments
         </Link>
+
         <button
           onClick={() => {
             localStorage.removeItem("admin");

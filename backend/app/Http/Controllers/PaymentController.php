@@ -53,14 +53,18 @@ class PaymentController extends Controller
 
     // get last 4 digits
     $cardLast4 = substr($request->card_number, -4);
+    $adminCommission = $request->amount * 0.10; // 10% admin commission
+$vendorAmount = $request->amount - $adminCommission; // rest goes to vendor
 
     $payment = UserPayment::create([
-        'enquiry_id' => $request->enquiry_id,
-        'customer_name' => $request->customer_name,
-        'customer_email' => $request->customer_email,
-        'amount' => $request->amount,
-        'bank' => $request->bank,
-        'card_last4' => $cardLast4
+ 'enquiry_id' => $request->enquiry_id,
+    'customer_name' => $request->customer_name,
+    'customer_email' => $request->customer_email,
+    'amount' => $request->amount,
+    'admin_commission' => $adminCommission,
+    'vendor_amount' => $vendorAmount,
+    'bank' => $request->bank,
+    'card_last4' => $cardLast4
     ]);
 
     return response()->json([
@@ -92,7 +96,25 @@ class PaymentController extends Controller
         ]);
     }
 
+public function payVendor($id)
+{
+    $payment = UserPayment::find($id);
 
+    if (!$payment) {
+        return response()->json([
+            'status' => false,
+            'message' => 'Payment not found'
+        ], 404);
+    }
+
+    $payment->payout_status = "paid";
+    $payment->save();
+
+    return response()->json([
+        'status' => true,
+        'message' => 'Vendor payout completed'
+    ]);
+}
     // DELETE PAYMENT
     public function destroy($id)
     {

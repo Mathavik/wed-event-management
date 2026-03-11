@@ -90,3 +90,4 @@ Route::prefix('admin')->group(function () {
 Route::post('/user-payment', [PaymentController::class, 'store']);
 Route::put('/user-payments/{id}', [PaymentController::class, 'update']);
 Route::delete('/user-payments/{id}', [PaymentController::class, 'destroy']);
+Route::post('/admin/pay-vendor/{id}', [PaymentController::class, 'payVendor']);
