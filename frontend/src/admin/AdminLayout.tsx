@@ -7,9 +7,9 @@ const AdminLayout: React.FC = () => {
   return (
     <div className="flex h-screen bg-gray-100">
       <AdminSidebar />
-      <div className="flex flex-col flex-1">
+     <div className="flex flex-col flex-1 min-w-0">  
         <AdminHeader />
-        <div className="p-6 overflow-y-auto">
+      <div className="p-6 overflow-y-auto overflow-x-hidden"> 
           <Outlet />
         </div>
       </div>

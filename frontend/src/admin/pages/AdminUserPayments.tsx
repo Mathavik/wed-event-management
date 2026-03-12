@@ -11,6 +11,7 @@ interface Payment {
   bank: string;
   card_last4: string;
   created_at: string;
+  payout_status?: string;
 }
 
 const AdminUserPayments: React.FC = () => {
@@ -46,6 +47,26 @@ const AdminUserPayments: React.FC = () => {
       setDeletingId(null);
     }
   };
+  const payVendor = async (id: number) => {
+  if (!window.confirm("Are you sure you want to pay this vendor?")) return;
+
+  try {
+    // Make API call to pay the vendor (replace with your backend endpoint)
+    await axiosInstance.post(`/admin/pay-vendor/${id}`);
+
+    // Update state locally to mark as paid
+    setPayments((prev) =>
+      prev.map((p) =>
+        p.id === id ? { ...p, payout_status: "paid" } : p
+      )
+    );
+
+    alert("Vendor paid successfully!");
+  } catch (error) {
+    console.error("Error paying vendor", error);
+    alert("Failed to pay vendor!");
+  }
+};
 
   const filtered = payments.filter(
     (p) =>
@@ -515,72 +536,90 @@ const AdminUserPayments: React.FC = () => {
 
               {filtered.map((payment) => (
                 <div className="ap-row" key={payment.id}>
-                  <div className="ap-cell">
-                    <span className="id-chip"># {payment.id}</span>
-                  </div>
-                  <div className="ap-cell">
-                    <span className="id-chip">{payment.enquiry_id}</span>
-                  </div>
-                  <div className="ap-cell">
-                    <div className="customer-cell">
-                      <div className="avatar" style={{ background: getColor(payment.customer_name) }}>
-                        {getInitials(payment.customer_name)}
-                      </div>
-                      <div className="customer-name">{payment.customer_name}</div>
-                    </div>
-                  </div>
-                  <div className="ap-cell customer-email">{payment.customer_email}</div>
-                  <div className="ap-cell">
-                    <span className="amount-tag">₹ {payment.amount}</span>
-                  </div>
-                  <div className="ap-cell">
-                    <span className="bank-tag">
-                      <svg width="11" height="11" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                        <rect x="3" y="8" width="18" height="13" rx="2"/><path d="M19 8V6a2 2 0 0 0-2-2H7a2 2 0 0 0-2 2v2"/>
-                      </svg>
-                      {payment.bank}
-                    </span>
-                  </div>
-                  <div className="ap-cell">
-                    <span className="card-tag">
-                      <svg width="12" height="12" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                        <rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/>
-                      </svg>
-                      •••• {payment.card_last4}
-                    </span>
-                  </div>
-                  <div className="ap-cell">
-                    <span className="date-tag">
-                      {new Date(payment.created_at).toLocaleDateString("en-IN", {
-                        day: "2-digit", month: "short", year: "numeric",
-                      })}
-                    </span>
-                  </div>
-                  <div className="ap-cell">
-                    <button
-                      className="btn-del"
-                      onClick={() => deletePayment(payment.id)}
-                      disabled={deletingId === payment.id}
-                    >
-                      {deletingId === payment.id ? (
-                        <>
-                          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" style={{ animation: "spin 0.8s linear infinite" }}>
-                            <path d="M21 12a9 9 0 1 1-6.219-8.56"/>
-                          </svg>
-                          Wait…
-                        </>
-                      ) : (
-                        <>
-                          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
-                            <polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/>
-                            <path d="M10 11v6M14 11v6M9 6V4h6v2"/>
-                          </svg>
-                          Delete
-                        </>
-                      )}
-                    </button>
-                  </div>
-                </div>
+  <div className="ap-cell">
+    <span className="id-chip"># {payment.id}</span>
+  </div>
+  <div className="ap-cell">
+    <span className="id-chip">{payment.enquiry_id}</span>
+  </div>
+  <div className="ap-cell">
+    <div className="customer-cell">
+      <div className="avatar" style={{ background: getColor(payment.customer_name) }}>
+        {getInitials(payment.customer_name)}
+      </div>
+      <div className="customer-name">{payment.customer_name}</div>
+    </div>
+  </div>
+  <div className="ap-cell customer-email">{payment.customer_email}</div>
+  <div className="ap-cell">
+    <span className="amount-tag">₹ {payment.amount}</span>
+  </div>
+  <div className="ap-cell">
+    <span className="bank-tag">
+      <svg width="11" height="11" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+        <rect x="3" y="8" width="18" height="13" rx="2"/>
+        <path d="M19 8V6a2 2 0 0 0-2-2H7a2 2 0 0 0-2 2v2"/>
+      </svg>
+      {payment.bank}
+    </span>
+  </div>
+  <div className="ap-cell">
+    <span className="card-tag">
+      <svg width="12" height="12" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+        <rect x="1" y="4" width="22" height="16" rx="2"/>
+        <line x1="1" y1="10" x2="23" y2="10"/>
+      </svg>
+      •••• {payment.card_last4}
+    </span>
+  </div>
+  <div className="ap-cell">
+    <span className="date-tag">
+      {new Date(payment.created_at).toLocaleDateString("en-IN", {
+        day: "2-digit", month: "short", year: "numeric",
+      })}
+    </span>
+  </div>
+
+  {/* Delete button cell */}
+  <div className="ap-cell">
+    <button
+      className="btn-del"
+      onClick={() => deletePayment(payment.id)}
+      disabled={deletingId === payment.id}
+    >
+      {deletingId === payment.id ? (
+        <>
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" style={{ animation: "spin 0.8s linear infinite" }}>
+            <path d="M21 12a9 9 0 1 1-6.219-8.56"/>
+          </svg>
+          Wait…
+        </>
+      ) : (
+        <>
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+            <polyline points="3 6 5 6 21 6"/>
+            <path d="M19 6l-1 14H6L5 6"/>
+            <path d="M10 11v6M14 11v6M9 6V4h6v2"/>
+          </svg>
+          Delete
+        </>
+      )}
+    </button>
+  </div>
+
+  {/* ✅ Pay Vendor button cell */}
+  <div className="ap-cell">
+   <button
+  className="btn-del"
+  style={{ background: '#e0f2fe', color: '#0ea5e9', border: '1px solid #38bdf8' }}
+  onClick={() => payVendor(payment.id)}
+  disabled={payment.payout_status === "paid"}
+>
+  {payment.payout_status === "paid" ? "Paid" : "Pay Vendor"}
+</button>
+  </div>
+</div>
+                
               ))}
 
               {filtered.length === 0 && (

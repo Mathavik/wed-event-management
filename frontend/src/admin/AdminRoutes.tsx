@@ -9,6 +9,7 @@ import Services from "./pages/Services";
 import Users from "./pages/Users";
 import AdminLogin from "./Adminlogin/AdminLogin";
 import AdminUserPayments from "./pages/AdminUserPayments";
+import UserBookings from "./pages/UserBookings";
 
 export default function AdminRoutes() {
   return (
@@ -32,6 +33,7 @@ export default function AdminRoutes() {
         <Route path="services" element={<Services />} />
         <Route path="users" element={<Users />} />
         <Route path="user-payments" element={<AdminUserPayments />} />
+        <Route path="user-bookings" element={<UserBookings />} />
       </Route>
     </Routes>
   );

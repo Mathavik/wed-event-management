@@ -7,7 +7,6 @@ use App\Models\UserPayment;
 
 class PaymentController extends Controller
 {
-
     // GET ALL PAYMENTS
     public function index()
     {
@@ -18,7 +17,6 @@ class PaymentController extends Controller
             'data' => $payments
         ]);
     }
-
 
     // GET SINGLE PAYMENT
     public function show($id)
@@ -38,27 +36,31 @@ class PaymentController extends Controller
         ]);
     }
 
-
     // STORE PAYMENT
-   public function store(Request $request)
+    public function store(Request $request)
 {
     $validated = $request->validate([
         'enquiry_id' => 'required',
         'customer_name' => 'required',
         'customer_email' => 'required|email',
-        'amount' => 'required',
+        'amount' => 'required|numeric|min:1',
         'bank' => 'required',
         'card_number' => 'required'
     ]);
 
-    // get last 4 digits
     $cardLast4 = substr($request->card_number, -4);
+    
+    // Simple calculation: 10% commission example
+    // $amount = $request->amount;
+    // $commission = $amount * 0.10; 
+    // $vendorAmount = $amount - $commission;
 
     $payment = UserPayment::create([
         'enquiry_id' => $request->enquiry_id,
         'customer_name' => $request->customer_name,
         'customer_email' => $request->customer_email,
-        'amount' => $request->amount,
+        'amount' => $amount,
+        
         'bank' => $request->bank,
         'card_last4' => $cardLast4
     ]);
@@ -68,8 +70,6 @@ class PaymentController extends Controller
         'data' => $payment
     ], 201);
 }
-
-
 
     // UPDATE PAYMENT
     public function update(Request $request, $id)
@@ -83,7 +83,15 @@ class PaymentController extends Controller
             ]);
         }
 
-        $payment->update($request->all());
+        // only allow updating columns that exist
+        $payment->update($request->only([
+            'enquiry_id',
+            'customer_name',
+            'customer_email',
+            'amount',
+            'bank',
+            'card_last4'
+        ]));
 
         return response()->json([
             'status' => true,
@@ -91,7 +99,6 @@ class PaymentController extends Controller
             'data' => $payment
         ]);
     }
-
 
     // DELETE PAYMENT
     public function destroy($id)

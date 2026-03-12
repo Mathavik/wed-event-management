@@ -41,27 +41,60 @@ class AdminUserController extends Controller
      * Optional: Create new user
      */
     public function store(Request $request)
-    {
-        $request->validate([
-            'name' => 'required|string',
-            'email' => 'required|email|unique:users,email',
-            'phone' => 'nullable|string',
-            'city' => 'nullable|string',
-            'role' => 'required|string',
-            'password' => 'required|string|min:6',
-        ]);
+{
+    $validated = $request->validate([
+        'enquiry_id' => 'required',
+        'customer_name' => 'required',
+        'customer_email' => 'required|email',
+        'amount' => 'required',
+        'bank' => 'required',
+        'card_number' => 'required'
+    ]);
 
-        $user = User::create([
-            'name' => $request->name,
-            'email' => $request->email,
-            'phone' => $request->phone,
-            'city' => $request->city,
-            'role' => $request->role,
-            'password' => bcrypt($request->password),
-        ]);
+    $amount = $request->amount;
 
-        return response()->json($user, 201);
+    // commission calculation
+    $adminCommission = $amount * 0.20;
+    $vendorAmount = $amount * 0.80;
+
+    $cardLast4 = substr($request->card_number, -4);
+
+    $payment = UserPayment::create([
+        'enquiry_id' => $request->enquiry_id,
+        'customer_name' => $request->customer_name,
+        'customer_email' => $request->customer_email,
+        'amount' => $amount,
+        'admin_commission' => $adminCommission,
+        'vendor_amount' => $vendorAmount,
+        'payout_status' => 'pending',
+        'bank' => $request->bank,
+        'card_last4' => $cardLast4
+    ]);
+
+    return response()->json([
+        'message' => 'Payment recorded successfully',
+        'data' => $payment
+    ], 201);
+}
+public function payVendor($id)
+{
+    $payment = UserPayment::find($id);
+
+    if (!$payment) {
+        return response()->json([
+            'status' => false,
+            'message' => 'Payment not found'
+        ]);
     }
+
+    $payment->payout_status = "paid";
+    $payment->save();
+
+    return response()->json([
+        'status' => true,
+        'message' => 'Vendor payout completed'
+    ]);
+}
 
     /**
      * PUT /admin/users/{id}
