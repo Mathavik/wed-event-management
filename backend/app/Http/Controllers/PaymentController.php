@@ -37,7 +37,7 @@ class PaymentController extends Controller
     }
 
     // STORE PAYMENT
-    public function store(Request $request)
+public function store(Request $request)
 {
     $validated = $request->validate([
         'enquiry_id' => 'required',
@@ -49,18 +49,14 @@ class PaymentController extends Controller
     ]);
 
     $cardLast4 = substr($request->card_number, -4);
-    
-    // Simple calculation: 10% commission example
-    // $amount = $request->amount;
-    // $commission = $amount * 0.10; 
-    // $vendorAmount = $amount - $commission;
+
+    $amount = $request->amount;
 
     $payment = UserPayment::create([
         'enquiry_id' => $request->enquiry_id,
         'customer_name' => $request->customer_name,
         'customer_email' => $request->customer_email,
         'amount' => $amount,
-        
         'bank' => $request->bank,
         'card_last4' => $cardLast4
     ]);
