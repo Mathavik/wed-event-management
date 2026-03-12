@@ -7,14 +7,11 @@ use Illuminate\Database\Eloquent\Model;
 class UserPayment extends Model
 {
   protected $fillable = [
-    'enquiry_id',
-    'customer_name',
-    'customer_email',
-    'amount',
-    'admin_commission',
-    'vendor_amount',
-    'payout_status',
-    'bank',
-    'card_last4'
-];
+        'enquiry_id',
+        'customer_name',
+        'customer_email',
+        'amount',
+        'bank',
+        'card_last4'
+    ];
 }

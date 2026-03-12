@@ -24,7 +24,7 @@ export default function AdminSidebar() {
           Services
         </Link>
  <Link to="/admin/user-bookings" className="block p-2 rounded hover:bg-pink-700">
-          User Bookings
+         Bookings
         </Link>
         <Link to="/admin/users" className="block p-2 rounded hover:bg-pink-700">
           Users

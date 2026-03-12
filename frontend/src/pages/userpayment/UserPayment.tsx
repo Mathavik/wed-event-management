@@ -38,8 +38,7 @@ const UserPayment: React.FC = () => {
       });
   }, [id]);
 
-  const handlePayment = async () => {
-
+ const handlePayment = async () => {
   if (!cardNumber || !expiry || !cvv || !bank) {
     alert("Please fill all payment details");
     return;
@@ -47,24 +46,26 @@ const UserPayment: React.FC = () => {
 
   if (!enquiry) return;
 
-  // FIX
-  const amount = parseInt(enquiry.budget.split("_")[0]);
+  // FIX: Extract only numbers from the budget string (e.g., "above_40000" -> 40000)
+  const amount = enquiry.budget ? parseInt(enquiry.budget.replace(/[^0-9]/g, "")) : 0;
+
+  if (!amount || isNaN(amount) || amount <= 0) {
+    alert("Invalid amount. Please contact admin.");
+    return;
+  }
 
   try {
-
     await axiosInstance.post("/user-payment", {
       enquiry_id: enquiry.id,
       customer_name: enquiry.customer_name,
       customer_email: enquiry.customer_email,
-      amount: amount,   // send number
+      amount: amount,
       bank: bank,
       card_number: cardNumber,
-      expiry: expiry,
-      cvv: cvv
+      // note: expiry and cvv are being sent but not handled in your Laravel store method
     });
 
     alert("Payment Successful! Your booking is confirmed.");
-
   } catch (error) {
     console.error(error);
     alert("Payment Failed");
