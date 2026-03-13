@@ -183,29 +183,7 @@ const UserBookings: React.FC = () => {
 
       <div className="max-w-7xl mx-auto px-4 sm:px-8 py-10 font-body">
 
-        {/* ── Header ── */}
-        <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4 mb-10">
-          <div>
-            <p className="text-xs font-semibold text-rose-500 uppercase tracking-[0.2em] mb-1">Admin Panel</p>
-            <h1 className="font-display text-4xl sm:text-5xl font-extrabold text-slate-900 leading-tight">
-              Wedding<br className="sm:hidden" /> Bookings
-            </h1>
-            <p className="text-slate-400 text-sm mt-2">Review and manage all incoming enquiries</p>
-          </div>
-
-          <button
-            onClick={fetchBookings}
-            disabled={loading}
-            className="self-start sm:self-auto inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-white ring-1 ring-slate-200 text-sm font-medium text-slate-600 hover:text-rose-500 hover:ring-rose-200 transition-all shadow-sm disabled:opacity-50"
-          >
-            {loading ? <Spinner size="sm" /> : (
-              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
-              </svg>
-            )}
-            Refresh
-          </button>
-        </div>
+        
 
         {/* ── Stat Cards ── */}
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
