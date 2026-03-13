@@ -22,6 +22,7 @@ export default function AdminSidebar() {
           { name: "Services", path: "/admin/services" },
           { name: "Bookings", path: "/admin/user-bookings" },
           { name: "Users", path: "/admin/users" },
+          { name: "Vendors", path: "/admin/vendors" },
           { name: "User Payments", path: "/admin/user-payments" },
         ].map((link) => (
           <Link
