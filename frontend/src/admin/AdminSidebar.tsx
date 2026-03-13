@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import logo from "../assets/logo.png";
 
 export default function AdminSidebar() {
   return (
@@ -7,11 +8,19 @@ export default function AdminSidebar() {
       style={{ backgroundColor: "#2D0B0B", borderRight: "1px solid rgba(201,168,76,0.2)" }}
     >
       {/* 1. Header Section */}
-      <div className="mb-8">
-        <h2 className="text-2xl font-bold italic" style={{ color: "#C9A84C" }}>Kalyana</h2>
-        <h2 className="text-xl font-bold italic -mt-2" style={{ color: "#C9A84C" }}>Vaibhogam</h2>
-        <p className="text-[10px] tracking-widest uppercase opacity-70 mt-1">Admin Panel</p>
-      </div>
+     <div className="mb-8 flex flex-col items-start">
+  <Link to="/">
+    <img
+      src={logo}
+      alt="Kalyana Vaibhogam"
+      className="w-40 object-contain cursor-pointer"
+    />
+  </Link>
+
+  <p className="text-[10px] tracking-widest uppercase opacity-70 mt-2">
+    Admin Panel
+  </p>
+</div>
 
       {/* 2. Navigation Links (Takes available space) */}
       <nav className="flex-grow space-y-1">
