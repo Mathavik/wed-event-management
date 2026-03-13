@@ -19,11 +19,11 @@ const FloralSeparator = () => (
 
 
 const Logo = () => (
-    <Link to="/" className="flex items-center">
+    <Link to="/" className="flex items-center mt-5  "> {/* Inga mt-4 add panniruken */}
         <img
             src={logo}
             alt="Kalyana Vaibhogam"
-            className="h-40 w-auto object-contain"
+            className="h-34 w-auto object-contain"
         />
     </Link>
 );
