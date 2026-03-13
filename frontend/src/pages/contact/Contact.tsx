@@ -95,7 +95,7 @@ const [showSuccess,setShowSuccess] = useState(false);
                   <div className="text-[#c89b6d]"><Phone size={32} strokeWidth={1.5} /></div>
                   <div>
                     <p className="text-sm font-bold text-gray-400 uppercase tracking-widest">Talk to our team</p>
-                    <p className="text-2xl font-bold text-[#0A1D37]">91 98765 43210</p>
+                    <p className="text-2xl font-bold text-[#0A1D37]">+91 98400 01100</p>
                   </div>
                 </div>
 
@@ -104,7 +104,7 @@ const [showSuccess,setShowSuccess] = useState(false);
                   <div className="text-[#c89b6d]"><Mail size={32} strokeWidth={1.5} /></div>
                   <div>
                     <p className="text-sm font-bold text-gray-400 uppercase tracking-widest">Write to us</p>
-                    <p className="text-xl font-bold text-[#0A1D37]">kvplanners@gmail.com</p>
+                    <p className="text-xl font-bold text-[#0A1D37]">hello@kalyanavaibhogam.com</p>
                   </div>
                 </div>
               </div>

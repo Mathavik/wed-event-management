@@ -4,8 +4,8 @@ import FeaturedPackages from "../home/FeaturedPackages";
 import ServicesOverview from "../home/ServicesOverview";
 import TestimonialsSection from "../home/TestimonialsSection";
 import ContactCTA from "../home/ContactCTA";
+import KalyanaVaibhogamPage from "./Gallery";
 import GalleryPage from "./Gallery";
-import EventPlannerHero from "./EventPlannerHero";
 
 const Home = () => {
   return (
@@ -15,7 +15,6 @@ const Home = () => {
       {/* <FeaturedPackages /> */}
 
       <ServicesOverview />
-      <EventPlannerHero/>
       <ContactCTA />
     <GalleryPage/>
 

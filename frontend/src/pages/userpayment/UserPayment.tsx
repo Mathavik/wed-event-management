@@ -2,8 +2,7 @@ import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import axios from "axios";
 import axiosInstance from "../../axiosInstance";
-import { useNavigate } from "react-router-dom";
-import Swal from "sweetalert2";
+
 interface Enquiry {
   id: number;
   customer_name: string;
@@ -15,7 +14,7 @@ interface Enquiry {
 
 const UserPayment: React.FC = () => {
   const { id } = useParams<{ id: string }>();
-const navigate = useNavigate();
+
   const [enquiry, setEnquiry] = useState<Enquiry | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
 
@@ -39,7 +38,7 @@ const navigate = useNavigate();
       });
   }, [id]);
 
-const handlePayment = async () => {
+ const handlePayment = async () => {
   if (!cardNumber || !expiry || !cvv || !bank) {
     alert("Please fill all payment details");
     return;
@@ -47,6 +46,7 @@ const handlePayment = async () => {
 
   if (!enquiry) return;
 
+  // FIX: Extract only numbers from the budget string (e.g., "above_40000" -> 40000)
   const amount = enquiry.budget ? parseInt(enquiry.budget.replace(/[^0-9]/g, "")) : 0;
 
   if (!amount || isNaN(amount) || amount <= 0) {
@@ -62,17 +62,10 @@ const handlePayment = async () => {
       amount: amount,
       bank: bank,
       card_number: cardNumber,
+      // note: expiry and cvv are being sent but not handled in your Laravel store method
     });
 
-Swal.fire({
-  title: "Payment Successful!",
-  text: "Your booking is confirmed",
-  icon: "success",
-  confirmButtonText: "OK"
-}).then(() => {
-  navigate("/");
-});  // 👈 home page ku redirect
-
+    alert("Payment Successful! Your booking is confirmed.");
   } catch (error) {
     console.error(error);
     alert("Payment Failed");
