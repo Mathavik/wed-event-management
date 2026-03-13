@@ -3,10 +3,10 @@ import logo from "../assets/logo.png";
 
 export default function AdminSidebar() {
   return (
-    <div 
-      className="w-64 min-h-screen sticky top-0 flex flex-col text-white p-5 transition-all" 
-      style={{ backgroundColor: "#2D0B0B", borderRight: "1px solid rgba(201,168,76,0.2)" }}
-    >
+ <div 
+  className="w-64 h-screen flex flex-col text-white p-5"
+  style={{ backgroundColor: "#2D0B0B", borderRight: "1px solid rgba(201,168,76,0.2)" }}
+>
       {/* 1. Header Section */}
      <div className="mb-8 flex flex-col items-start">
   <Link to="/">
@@ -48,8 +48,7 @@ export default function AdminSidebar() {
       </nav>
 
       {/* 3. Logout Section (Always at the bottom) */}
-      <div className="pt-5 border-t border-white/10">
-        <button
+{/* <div className="pt-5 border-t border-white/10 mt-auto">        <button
           onClick={() => {
             localStorage.removeItem("admin");
             window.location.href = "/";
@@ -66,7 +65,7 @@ export default function AdminSidebar() {
           </svg>
           Logout
         </button>
-      </div>
+      </div> */}
     </div>
   );
 }
