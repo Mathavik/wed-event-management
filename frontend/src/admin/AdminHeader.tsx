@@ -1,77 +1,94 @@
 import { useState, useEffect } from "react";
-import { Link } from "lucide-react";
+import { Link } from "react-router-dom";
+
+interface AdminUser {
+  name?: string; // Made optional to prevent crashes if missing
+  email?: string;
+}
 
 export default function AdminHeader() {
   const [dropdownOpen, setDropdownOpen] = useState(false);
-
-  const [user, setUser] = useState<any>(null);
+  const [user, setUser] = useState<AdminUser | null>(null);
 
   useEffect(() => {
     const storedUser = localStorage.getItem("admin");
     if (storedUser) {
-      setUser(JSON.parse(storedUser));
+      try {
+        const parsedUser = JSON.parse(storedUser);
+        setUser(parsedUser);
+      } catch (e) {
+        console.error("Failed to parse admin data", e);
+      }
     }
   }, []);
+
+  // Safe check for the name
+  const displayName = user?.name || "Admin";
+  const initial = displayName.charAt(0).toUpperCase();
+
   return (
-    <div className="bg-white shadow p-4 flex justify-between items-center">
-      <h1 className="text-xl font-semibold">Admin Dashboard</h1>
+    <div className="p-4 flex justify-between items-center border-b" 
+         style={{ backgroundColor: "#1F0808", borderColor: "rgba(201,168,76,0.2)" }}>
+      
+      <h1 className="text-xl font-semibold uppercase tracking-wider" style={{ color: "#C9A84C" }}>
+        Admin Dashboard
+      </h1>
 
-      <div className="flex items-center gap-3">
-        <span className="text-gray-600">Admin</span>
-        {/* <div className="w-8 h-8 bg-pink-500 rounded-full"></div> */}
-      </div>
-
-      <div className="hidden lg:flex items-center gap-4">
+      <div className="flex items-center gap-4">
         {user ? (
           <div className="relative">
-
-            {/* Clickable User Area */}
             <div
               onClick={() => setDropdownOpen(!dropdownOpen)}
-              className="flex items-center gap-2 cursor-pointer select-none"
+              className="flex items-center gap-3 cursor-pointer select-none group"
             >
-              <div className="w-9 h-9 rounded-full bg-pink-500 text-white flex items-center justify-center font-bold">
-                {user?.name?.charAt(0).toUpperCase()}
+              <div className="flex flex-col items-end hidden sm:flex">
+                <span className="text-sm font-medium" style={{ color: "#C9A84C" }}>
+                    {displayName}
+                </span>
+                <span className="text-[10px] text-gray-400">System Administrator</span>
               </div>
-              <span style={{ color: "#C9A84C" }}>
-                {user?.name}
-              </span>
+              <div 
+                className="w-10 h-10 rounded-full flex items-center justify-center font-bold border-2"
+                style={{ backgroundColor: "#2D0B0B", borderColor: "#C9A84C", color: "#C9A84C" }}
+              >
+                {initial}
+              </div>
             </div>
 
-            {/* Dropdown Menu */}
             {dropdownOpen && (
               <div
-                className="absolute right-0 mt-3 w-40 rounded shadow-lg overflow-hidden z-50"
+                className="absolute right-0 mt-3 w-48 rounded-md shadow-2xl overflow-hidden z-50"
                 style={{
-                  background: "#1a0404",
-                  border: "1px solid rgba(201,168,76,0.3)",
+                  background: "#2D0B0B",
+                  border: "1px solid #C9A84C",
                 }}
               >
-                <Link
+                {/* <Link
                   to="/profilepage"
-                  className="block px-4 py-2 text-sm hover:bg-[#2a0808]"
+                  className="block px-4 py-3 text-sm hover:bg-[#3d1212] transition-colors"
                   style={{ color: "#C9A84C" }}
                   onClick={() => setDropdownOpen(false)}
                 >
-                  Profile
-                </Link>
+                  My Profile
+                </Link> */}
 
-                <button
+                {/* <button
                   onClick={() => {
-                    localStorage.removeItem("user");
+                    localStorage.removeItem("admin");
                     setDropdownOpen(false);
                     window.location.href = "/";
                   }}
-                  className="w-full text-left px-4 py-2 text-sm hover:bg-[#2a0808]"
-                  style={{ color: "#C9A84C" }}
+                  className="w-full text-left px-4 py-3 text-sm hover:bg-red-950/40 border-t border-[#C9A84C]/20 transition-colors"
+                  style={{ color: "#ff4d4d" }}
                 >
-                  Logout
-                </button>
+                  Sign Out
+                </button> */}
               </div>
             )}
           </div>
         ) : (
-          <Link to="/login" style={{ color: "#C9A84C" }}>
+          <Link to="/login" className="px-4 py-2 rounded border transition-all" 
+                style={{ color: "#C9A84C", borderColor: "#C9A84C" }}>
             Login
           </Link>
         )}
