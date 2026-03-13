@@ -63,16 +63,16 @@ export default function AdminHeader() {
                   border: "1px solid #C9A84C",
                 }}
               >
-                <Link
+                {/* <Link
                   to="/profilepage"
                   className="block px-4 py-3 text-sm hover:bg-[#3d1212] transition-colors"
                   style={{ color: "#C9A84C" }}
                   onClick={() => setDropdownOpen(false)}
                 >
                   My Profile
-                </Link>
+                </Link> */}
 
-                <button
+                {/* <button
                   onClick={() => {
                     localStorage.removeItem("admin");
                     setDropdownOpen(false);
@@ -82,7 +82,7 @@ export default function AdminHeader() {
                   style={{ color: "#ff4d4d" }}
                 >
                   Sign Out
-                </button>
+                </button> */}
               </div>
             )}
           </div>
