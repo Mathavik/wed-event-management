@@ -16,6 +16,9 @@ export default function AdminSidebar() {
           Vendor Payments
         </Link>
 
+<Link to="/admin/vendors" className="block p-2 rounded hover:bg-pink-700">
+          Vendors
+        </Link>
         <Link to="/admin/events" className="block p-2 rounded hover:bg-pink-700">
           Event Types
         </Link>

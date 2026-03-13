@@ -10,6 +10,7 @@ import Users from "./pages/Users";
 import AdminLogin from "./Adminlogin/AdminLogin";
 import AdminUserPayments from "./pages/AdminUserPayments";
 import UserBookings from "./pages/UserBookings";
+import AdminVendor from "./pages/vendors";
 
 export default function AdminRoutes() {
   return (
@@ -34,6 +35,8 @@ export default function AdminRoutes() {
         <Route path="users" element={<Users />} />
         <Route path="user-payments" element={<AdminUserPayments />} />
         <Route path="user-bookings" element={<UserBookings />} />
+        <Route path="vendors" element={<AdminVendor />} />
+
       </Route>
     </Routes>
   );
