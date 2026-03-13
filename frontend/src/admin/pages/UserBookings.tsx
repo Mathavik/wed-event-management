@@ -184,7 +184,7 @@ const UserBookings: React.FC = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-8 py-10 font-body">
 
         
-        
+
 
         {/* ── Stat Cards ── */}
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
@@ -192,6 +192,7 @@ const UserBookings: React.FC = () => {
             label="Total"
             value={stats.total}
             colorClass="text-slate-800"
+            
             bgClass="bg-white"
             ringClass="ring-slate-200"
             icon={<svg className="w-5 h-5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.8} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>}
