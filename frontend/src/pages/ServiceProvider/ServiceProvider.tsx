@@ -190,7 +190,7 @@ const ServiceProvider = () => {
               <div className="relative h-48 bg-gray-200 overflow-hidden">
                 {provider.image ? (
                   <img
-                    src={`http://127.0.0.1:8000/uploads/providers/${provider.image}`}
+                    src={`http://127.0.0.1:8000/uploads/services/${provider.image}`}
                     alt={provider.name}
                     className="w-full h-full object-cover"
                   />
@@ -549,7 +549,7 @@ const ServiceProvider = () => {
                         <div className="h-32 bg-gray-200 overflow-hidden">
                           {provider.image ? (
                             <img
-                              src={`http://127.0.0.1:8000/uploads/providers/${provider.image}`}
+                              src={`http://127.0.0.1:8000/uploads/services/${provider.image}`}
                               alt={provider.name}
                               className="w-full h-full object-cover"
                             />
